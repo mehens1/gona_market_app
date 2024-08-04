@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:package_info_plus/package_info_plus.dart';
+import 'package:gona_market_app/presentation/routes/app_routes.dart';
 
 class SplashScreen extends StatefulWidget {
-  const SplashScreen({Key? key}) : super(key: key);
+  const SplashScreen({super.key});
 
   @override
-  // ignore: library_private_types_in_public_api
   _SplashScreenState createState() => _SplashScreenState();
 }
 
@@ -23,12 +23,8 @@ class _SplashScreenState extends State<SplashScreen> {
     setState(() {
       _version = 'Version ${packageInfo.version}';
     });
-
-    // Simulate a delay for the splash screen
-    await Future.delayed(const Duration(seconds: 3));
-
-    // Navigate to the next screen (e.g., LoginScreen)
-    // Navigator.pushReplacementNamed(context, '/login');
+    await Future.delayed(const Duration(seconds: 2));
+    Navigator.pushReplacementNamed(context, AppRoutes.home);
   }
 
   @override
@@ -46,13 +42,20 @@ class _SplashScreenState extends State<SplashScreen> {
             bottom: 50,
             left: 0,
             right: 0,
-            child: Text(
-              _version,
-              textAlign: TextAlign.center,
-              style: const TextStyle(
-                fontSize: 16,
-                color: Colors.grey,
-              ),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Text(
+                  _version,
+                  textAlign: TextAlign.center,
+                  style: const TextStyle(
+                    fontSize: 16,
+                    color: Colors.grey,
+                  ),
+                ),
+                const SizedBox(height: 20),
+                const CircularProgressIndicator(),
+              ],
             ),
           ),
         ],
