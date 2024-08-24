@@ -4,6 +4,7 @@ import 'package:gona_market_app/core/widgets/text_inputs.dart';
 import 'package:gona_market_app/data/models/product_model.dart';
 import 'package:gona_market_app/data/repositories/user_repository.dart';
 import 'package:gona_market_app/logic/providers/product_provider.dart';
+import 'package:gona_market_app/presentation/routes/app_routes.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
@@ -51,7 +52,9 @@ class _HomeScreenState extends State<HomeScreen> {
               color: Theme.of(context).colorScheme.primary,
               size: 50,
             ),
-            onPressed: () {},
+            onPressed: () {
+              Navigator.pushNamed(context, AppRoutes.login);
+            },
           ),
         ],
       ),

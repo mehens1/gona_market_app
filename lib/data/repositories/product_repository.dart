@@ -9,7 +9,6 @@ class ProductRepository {
 
   Future<List<ProductModel>> getProducts() async {
     final response = await apiService.get('/products');
-    print('checks here: $response');
     return (response.data as List)
         .map((productJson) => ProductModel.fromJson(productJson))
         .toList();
