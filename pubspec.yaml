@@ -69,7 +69,7 @@ flutter:
     - .env.development
     - .env.production
     - assets/
-    - assets/images/product_placeholder.png
+    - assets/images/
     - assets/images/icons/png/
   #   - images/a_dot_ham.jpeg
 

@@ -9,14 +9,14 @@ class PrimaryButton extends StatelessWidget {
   final EdgeInsetsGeometry? padding;
 
   const PrimaryButton({
-    Key? key,
+    super.key,
     required this.text,
     required this.onPressed,
     this.color,
     this.textColor,
     this.borderRadius = 8.0,
     this.padding = const EdgeInsets.symmetric(vertical: 16.0, horizontal: 32.0), // default padding
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {

@@ -7,14 +7,17 @@ class PrimaryTextInput extends StatefulWidget {
   final bool obscureText;
   final String? Function(String?)? validator;
   final Widget? suffixIcon;
+  final FocusNode? focusNode;
 
-  PrimaryTextInput({
+  const PrimaryTextInput({
+    super.key,
     required this.labelText,
     required this.controller,
     this.keyboardType = TextInputType.text,
     this.obscureText = false,
     this.validator,
     this.suffixIcon,
+    this.focusNode,
   });
 
   @override
@@ -28,6 +31,12 @@ class _PrimaryTextInputState extends State<PrimaryTextInput> {
   void initState() {
     super.initState();
     _obscureText = widget.obscureText;
+
+    if (widget.focusNode != null) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        FocusScope.of(context).requestFocus(widget.focusNode);
+      });
+    }
   }
 
   @override
@@ -38,6 +47,7 @@ class _PrimaryTextInputState extends State<PrimaryTextInput> {
         controller: widget.controller,
         keyboardType: widget.keyboardType,
         obscureText: _obscureText,
+        focusNode: widget.focusNode,
         decoration: InputDecoration(
           labelText: widget.labelText,
           border: const OutlineInputBorder(),

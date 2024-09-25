@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:gona_market_app/core/widgets/button.dart';
 import 'package:gona_market_app/core/widgets/text_inputs.dart';
+import 'package:gona_market_app/presentation/routes/app_routes.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -10,9 +11,9 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
-  TextEditingController _usernameController = TextEditingController();
-  TextEditingController _passwordController = TextEditingController();
-  bool _obscureText = true;
+  final TextEditingController _usernameController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
+  final bool _obscureText = true;
 
   @override
   void dispose() {
@@ -20,8 +21,7 @@ class _LoginScreenState extends State<LoginScreen> {
     _passwordController.dispose();
     super.dispose();
   }
-
-  @override
+  
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -51,92 +51,97 @@ class _LoginScreenState extends State<LoginScreen> {
                   topRight: Radius.circular(50.0),
                 ),
               ),
-              child: Column(
-                children: [
-                  const SizedBox(height: 30),
-                  Text(
-                    'Login',
-                    style: Theme.of(context).textTheme.headlineMedium?.copyWith(
-                          fontWeight: FontWeight.w800,
-                          fontSize: 43,
-                          color: Theme.of(context).primaryColor,
-                        ),
-                  ),
-                  const SizedBox(height: 50),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 50.0),
-                    child: Column(
-                      children: [
-                        PrimaryTextInput(
-                          labelText: 'Username...',
-                          controller: _usernameController,
-                          keyboardType: TextInputType.text,
-                        ),
-                        const SizedBox(height: 30),
-                        PrimaryTextInput(
-                          labelText: 'Password...',
-                          controller: _passwordController,
-                          obscureText: true,
-                          suffixIcon: Icon(
+              child: SingleChildScrollView(
+                child: Column(
+                  children: [
+                    const SizedBox(height: 30),
+                    Text(
+                      'Login',
+                      style: Theme.of(context).textTheme.headlineMedium?.copyWith(
+                            fontWeight: FontWeight.w800,
+                            fontSize: 43,
                             color: Theme.of(context).primaryColor,
-                            _obscureText
-                                ? Icons.visibility
-                                : Icons.visibility_off,
                           ),
-                        ),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.end,
-                          children: [
-                            Text(
-                              'Forgot Password? ',
-                              style: Theme.of(context)
-                                  .textTheme
-                                  .bodyLarge
-                                  ?.copyWith(),
-                            ),
-                            Text(
-                              'Recover',
-                              style: Theme.of(context)
-                                  .textTheme
-                                  .bodyLarge
-                                  ?.copyWith(
-                                    fontWeight: FontWeight.bold,
-                                    color:
-                                        Theme.of(context).colorScheme.primary,
-                                  ),
-                            ),
-                          ],
-                        ),
-                        const SizedBox(height: 50),
-                        PrimaryButton(text: "Login", onPressed: () {}),
-                        const SizedBox(height: 50),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Text(
-                              'New here? ',
-                              style: Theme.of(context)
-                                  .textTheme
-                                  .bodyLarge
-                                  ?.copyWith(),
-                            ),
-                            Text(
-                              'Register',
-                              style: Theme.of(context)
-                                  .textTheme
-                                  .bodyLarge
-                                  ?.copyWith(
-                                    fontWeight: FontWeight.bold,
-                                    color:
-                                        Theme.of(context).colorScheme.primary,
-                                  ),
-                            ),
-                          ],
-                        )
-                      ],
                     ),
-                  ),
-                ],
+                    const SizedBox(height: 50),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 50.0),
+                      child: Column(
+                        children: [
+                          PrimaryTextInput(
+                            labelText: 'Username...',
+                            controller: _usernameController,
+                            keyboardType: TextInputType.text,
+                          ),
+                          const SizedBox(height: 30),
+                          PrimaryTextInput(
+                            labelText: 'Password...',
+                            controller: _passwordController,
+                            obscureText: true,
+                            suffixIcon: Icon(
+                              color: Theme.of(context).primaryColor,
+                              _obscureText
+                                  ? Icons.visibility
+                                  : Icons.visibility_off,
+                            ),
+                          ),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.end,
+                            children: [
+                              Text(
+                                'Forgot Password? ',
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .bodyLarge
+                                    ?.copyWith(),
+                              ),
+                              Text(
+                                'Recover',
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .bodyLarge
+                                    ?.copyWith(
+                                      fontWeight: FontWeight.bold,
+                                      color:
+                                          Theme.of(context).colorScheme.primary,
+                                    ),
+                              ),
+                            ],
+                          ),
+                          const SizedBox(height: 50),
+                          PrimaryButton(text: "Login", onPressed: () {}),
+                          const SizedBox(height: 50),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Text(
+                                'New here? ',
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .bodyLarge
+                                    ?.copyWith(),
+                              ),
+                              GestureDetector(
+                                onTap:() => Navigator.popAndPushNamed(context, AppRoutes.register),
+                                child: Text(
+                                  'Register',
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .bodyLarge
+                                      ?.copyWith(
+                                        fontWeight: FontWeight.bold,
+                                        color:
+                                            Theme.of(context).colorScheme.primary,
+                                      ),
+                                ),
+                              ),
+                            ],
+                          )
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
               ),
             ),
           ),

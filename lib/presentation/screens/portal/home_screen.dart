@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
 import 'package:gona_market_app/core/widgets/text_inputs.dart';
@@ -17,15 +19,18 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   final UserRepository _userRepository = GetIt.instance<UserRepository>();
-  TextEditingController searchInputController = new TextEditingController();
+  TextEditingController searchInputController = TextEditingController();
 
   @override
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      final productProvider =
-          Provider.of<ProductProvider>(context, listen: false);
+      final productProvider = Provider.of<ProductProvider>(context, listen: false);
       productProvider.fetchProducts();
+
+      Timer.periodic(const Duration(seconds: 30), (timer) {
+        productProvider.fetchProducts();
+      });
     });
   }
 
@@ -90,8 +95,45 @@ class _HomeScreenState extends State<HomeScreen> {
               padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 0),
               child: Consumer<ProductProvider>(
                 builder: (context, productProvider, child) {
-                  if (productProvider.products.isEmpty) {
+                  if (productProvider.loading) {
                     return const Center(child: CircularProgressIndicator());
+                  }
+
+                  if (productProvider.errorMessage != null) {
+                    return Center(
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          const Icon(
+                            Icons.error_outline,
+                            color: Colors.red,
+                            size: 50,
+                          ),
+                          const SizedBox(height: 20),
+                          Text(
+                            productProvider.errorMessage!,
+                            style: const TextStyle(
+                              fontSize: 16,
+                              color: Colors.red,
+                            ),
+                            textAlign: TextAlign.center,
+                          ),
+                          const SizedBox(height: 20),
+                          ElevatedButton(
+                            onPressed: () {
+                              productProvider.fetchProducts();
+                            },
+                            child: const Text('Retry'),
+                          ),
+                        ],
+                      ),
+                    );
+                  }
+
+                  if (productProvider.products.isEmpty) {
+                    return Center(
+                      child: Image.asset('assets/images/no-product.png'),
+                    );
                   }
 
                   return GridView.builder(
@@ -186,7 +228,6 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
             ),
           ),
-      
           Flexible(
             child: Padding(
               padding: const EdgeInsets.symmetric(horizontal: 10),
@@ -199,7 +240,6 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
             ),
           ),
-      
           if (product.guage != null)
             Padding(
               padding: const EdgeInsets.symmetric(
