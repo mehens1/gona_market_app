@@ -21,9 +21,19 @@ class _LoginScreenState extends State<LoginScreen> {
     _passwordController.dispose();
     super.dispose();
   }
-  
+
   @override
   Widget build(BuildContext context) {
+    final successMessage = ModalRoute.of(context)?.settings.arguments as String?;
+
+    if (successMessage != null) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text(successMessage)),
+        );
+      });
+    }
+
     return Scaffold(
       backgroundColor: Theme.of(context).primaryColor,
       body: Column(
@@ -57,11 +67,12 @@ class _LoginScreenState extends State<LoginScreen> {
                     const SizedBox(height: 30),
                     Text(
                       'Login',
-                      style: Theme.of(context).textTheme.headlineMedium?.copyWith(
-                            fontWeight: FontWeight.w800,
-                            fontSize: 43,
-                            color: Theme.of(context).primaryColor,
-                          ),
+                      style:
+                          Theme.of(context).textTheme.headlineMedium?.copyWith(
+                                fontWeight: FontWeight.w800,
+                                fontSize: 43,
+                                color: Theme.of(context).primaryColor,
+                              ),
                     ),
                     const SizedBox(height: 50),
                     Padding(
@@ -122,7 +133,8 @@ class _LoginScreenState extends State<LoginScreen> {
                                     ?.copyWith(),
                               ),
                               GestureDetector(
-                                onTap:() => Navigator.popAndPushNamed(context, AppRoutes.register),
+                                onTap: () => Navigator.popAndPushNamed(
+                                    context, AppRoutes.register),
                                 child: Text(
                                   'Register',
                                   style: Theme.of(context)
@@ -130,8 +142,9 @@ class _LoginScreenState extends State<LoginScreen> {
                                       .bodyLarge
                                       ?.copyWith(
                                         fontWeight: FontWeight.bold,
-                                        color:
-                                            Theme.of(context).colorScheme.primary,
+                                        color: Theme.of(context)
+                                            .colorScheme
+                                            .primary,
                                       ),
                                 ),
                               ),
