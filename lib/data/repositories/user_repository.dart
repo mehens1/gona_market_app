@@ -6,17 +6,15 @@ class UserRepository {
 
   UserRepository(this.apiService);
 
-  Future<UserModel> getUser(String userId) async {
+  Future<UserModel> getUser() async {
     try {
-      final response = await apiService.get('/users/$userId');
-      // Check if response data is not null and is in the expected format
+      final response = await apiService.get('/me');
       if (response.data != null && response.data is Map<String, dynamic>) {
         return UserModel.fromJson(response.data);
       } else {
         throw Exception('Unexpected response format');
       }
     } catch (error) {
-      // Handle or log the error
       print('Failed to fetch user: $error');
       rethrow;
     }
@@ -26,7 +24,6 @@ class UserRepository {
     try {
       await apiService.put('/users/${user.id}', data: user.toJson());
     } catch (error) {
-      // Handle or log the error
       print('Failed to update user: $error');
       rethrow;
     }

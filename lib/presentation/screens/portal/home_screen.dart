@@ -6,6 +6,7 @@ import 'package:gona_market_app/core/widgets/text_inputs.dart';
 import 'package:gona_market_app/data/models/product_model.dart';
 import 'package:gona_market_app/data/repositories/user_repository.dart';
 import 'package:gona_market_app/logic/providers/product_provider.dart';
+import 'package:gona_market_app/logic/providers/user_provider.dart';
 import 'package:gona_market_app/presentation/routes/app_routes.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
@@ -53,12 +54,27 @@ class _HomeScreenState extends State<HomeScreen> {
         actions: [
           IconButton(
             icon: Icon(
-              Icons.account_circle,
+              Icons.shopping_basket_rounded,
               color: Theme.of(context).colorScheme.primary,
               size: 50,
             ),
             onPressed: () {
               Navigator.pushNamed(context, AppRoutes.login);
+            },
+          ),
+          IconButton(
+            icon: Icon(
+              Icons.account_circle,
+              color: Theme.of(context).colorScheme.primary,
+              size: 50,
+            ),
+            onPressed: () {
+              final userProvider = Provider.of<UserProvider>(context, listen: false);
+              if (userProvider.isLoggedIn) {
+                Navigator.pushNamed(context, AppRoutes.userProfile);
+                } else {
+                  Navigator.pushNamed(context, AppRoutes.login);
+                }
             },
           ),
         ],

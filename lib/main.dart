@@ -10,8 +10,11 @@ import 'package:gona_market_app/data/repositories/states_repository.dart';
 import 'package:gona_market_app/data/repositories/user_repository.dart';
 import 'package:gona_market_app/data/services/api_service.dart';
 import 'package:gona_market_app/app/theme.dart';
+import 'package:gona_market_app/data/services/auth_service.dart';
+import 'package:gona_market_app/data/services/token_service.dart';
 import 'package:gona_market_app/logic/providers/cart_provider.dart';
 import 'package:gona_market_app/logic/providers/lga_provider.dart';
+import 'package:gona_market_app/logic/providers/login_provider.dart';
 import 'package:gona_market_app/logic/providers/order_provider.dart';
 import 'package:gona_market_app/logic/providers/product_provider.dart';
 import 'package:gona_market_app/logic/providers/states_provider.dart';
@@ -35,8 +38,13 @@ void setupLocator() {
   getIt.registerLazySingleton(() => ProductProvider(getIt<ProductRepository>()));
   getIt.registerLazySingleton(() => StatesProvider(getIt<StatesRepository>()));
   getIt.registerLazySingleton(() => LGAProvider(getIt<LGARepository>()));
-}
 
+  getIt.registerLazySingleton(() => AuthService(getIt<ApiService>()));
+  getIt.registerLazySingleton(() => TokenService());
+
+  getIt.registerLazySingleton(() => LoginProvider(getIt<AuthService>(), getIt<UserProvider>(), getIt<TokenService>()));
+  
+}
 
 String fileName = kReleaseMode ? ".env.production" : ".env.development";
 
@@ -54,6 +62,7 @@ void main() async {
         ChangeNotifierProvider(create: (_) => GetIt.instance<OrderProvider>()),
         ChangeNotifierProvider(create: (_) => GetIt.instance<StatesProvider>()),
         ChangeNotifierProvider(create: (_) => GetIt.instance<LGAProvider>()),
+        ChangeNotifierProvider(create: (_) => GetIt.instance<LoginProvider>()),
       ],
       child: const MyApp(),
     ),

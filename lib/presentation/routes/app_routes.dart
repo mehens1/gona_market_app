@@ -1,9 +1,11 @@
 // app_routes.dart
 import 'package:flutter/material.dart';
+import 'package:gona_market_app/presentation/screens/auth/account_under_review.dart';
 import 'package:gona_market_app/presentation/screens/auth/forgot_password.dart';
 import 'package:gona_market_app/presentation/screens/auth/login_screen.dart';
 import 'package:gona_market_app/presentation/screens/auth/register_screen.dart';
 import 'package:gona_market_app/presentation/screens/auth/terms_and_condition.dart';
+import 'package:gona_market_app/presentation/screens/portal/profile_screen.dart';
 import 'package:gona_market_app/presentation/screens/splash_screen.dart';
 import 'package:gona_market_app/presentation/screens/portal/home_screen.dart';
 
@@ -11,10 +13,12 @@ class AppRoutes {
   // Define route names as constants
   static const String splash = '/splash';
   static const String login = '/login';
+  static const String accountUnderVerification = '/account-under-verification';
   static const String register = '/register';
   static const String forgotPassword = '/forgot-password';
   static const String termsAndCondition = '/terms-and-condition';
   static const String home = '/';
+  static const String userProfile = '/user-profile';
 
   // Define a method to generate routes
   static Route<dynamic> generateRoute(RouteSettings settings) {
@@ -27,6 +31,8 @@ class AppRoutes {
         return MaterialPageRoute(builder: (_) => const LoginScreen());
       case register:
         return MaterialPageRoute(builder: (_) => const RegisterScreen());
+      case accountUnderVerification:
+        return MaterialPageRoute(builder: (_) => const AccountUnderReview());
       case forgotPassword:
         return MaterialPageRoute(builder: (_) => const ForgotPassword());
       case termsAndCondition:
@@ -34,6 +40,8 @@ class AppRoutes {
       
       case home:
         return MaterialPageRoute(builder: (_) => const HomeScreen());
+      case userProfile:
+        return MaterialPageRoute(builder: (_) => const ProfileScreen());
       default:
         return MaterialPageRoute(builder: (_) => const UndefinedRouteScreen());
     }

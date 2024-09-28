@@ -1,5 +1,4 @@
 import 'package:dio/dio.dart';
-import 'package:flutter/foundation.dart';
 import 'package:gona_market_app/data/services/api_service.dart';
 
 class RegistrationService {
@@ -7,14 +6,6 @@ class RegistrationService {
 
   RegistrationService(this.apiService);
 
-  // Future<Response> registerUser(Map<String, dynamic> userData) async {
-  //   try {
-  //     final response = await apiService.post('/auth/register', data: userData);
-  //     return response;
-  //   } catch (e) {
-  //     rethrow;
-  //   }
-  // }
   Future<Response> registerUser(Map<String, dynamic> userData) async {
     try {
       final response = await apiService.post('/auth/register', data: userData);

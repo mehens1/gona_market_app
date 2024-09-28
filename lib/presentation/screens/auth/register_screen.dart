@@ -1,6 +1,7 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:gona_market_app/core/utils/show_error_dialog.dart';
 import 'package:gona_market_app/core/widgets/button.dart';
 import 'package:gona_market_app/core/widgets/dropdown.dart';
 import 'package:gona_market_app/core/widgets/text_inputs.dart';
@@ -32,23 +33,22 @@ class _RegisterScreenState extends State<RegisterScreen> {
   final TextEditingController _confirmPasswordController =
       TextEditingController();
 
-  bool _obscureNewPassword = true;
-  bool _obscureConfirmPassword = true;
-  bool _tAndCAgreed = false;
+  late final bool _obscurePassword = true;
+  late bool _tAndCAgreed = false;
 
   var selectedState;
   var selectedLGA;
   bool _isLoading = false;
   List<Map<String, dynamic>> localGovernments = [];
 
-  String? _firstnameError;
-  String? _lastnameError;
-  String? _emailError;
-  String? _phoneNumberError;
-  String? _newPasswordError;
-  String? _confirmPasswordError;
-  String? _stateError;
-  String? _lgaError;
+  // String? _firstnameError;
+  // String? _lastnameError;
+  // String? _emailError;
+  // String? _phoneNumberError;
+  // String? _newPasswordError;
+  // String? _confirmPasswordError;
+  // String? _stateError;
+  // String? _lgaError;
 
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
@@ -87,7 +87,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
   void _submitRegistration() async {
     if (_formKey.currentState!.validate()) {
       if (!_tAndCAgreed) {
-        _showErrorDialog('Agreement Required',
+        showErrorDialog(context, 'Agreement Required!',
             'You must agree to the terms and conditions!');
         return;
       }
@@ -111,15 +111,17 @@ class _RegisterScreenState extends State<RegisterScreen> {
         final response =
             await _registrationService.registerUser(registrationData);
         if (response.statusCode == 200 || response.statusCode == 201) {
-          Navigator.popAndPushNamed(context, AppRoutes.login, arguments: 'Registration successful! Please log in.');
+          Navigator.popAndPushNamed(
+              context, AppRoutes.accountUnderVerification);
         } else {
           if (kDebugMode) {
-          print('register try catch error: $response');
-        }
-          _showErrorDialog('', 'Registration failed. Please try again. 1');
+            print('register try catch error: $response');
+          }
+          showErrorDialog(context, 'Registration Error!',
+              'Registration failed. Please try again.');
         }
       } catch (error) {
-        _showErrorDialog('', '$error');
+        showErrorDialog(context, 'Registration Error!', 'Error: $error.');
         if (kDebugMode) {
           print('register try catch error: $error');
         }
@@ -129,29 +131,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
         _isLoading = false;
       });
     }
-  }
-
-  void _showErrorDialog(String heading, String message) {
-    final String dialogTitle =
-        heading.isNotEmpty ? heading : "Registration Error";
-
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: Text(dialogTitle),
-          content: Text(message),
-          actions: [
-            TextButton(
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-              child: const Text("OK"),
-            ),
-          ],
-        );
-      },
-    );
   }
 
   @override
@@ -297,7 +276,13 @@ class _RegisterScreenState extends State<RegisterScreen> {
                             PrimaryTextInput(
                               labelText: 'New Password...',
                               controller: _newPasswordController,
-                              obscureText: _obscureNewPassword,
+                              obscureText: _obscurePassword,
+                            suffixIcon: Icon(
+                              color: Theme.of(context).primaryColor,
+                              _obscurePassword
+                                  ? Icons.visibility
+                                  : Icons.visibility_off,
+                            ),
                               validator: (value) {
                                 if (value == null || value.isEmpty) {
                                   return 'Please enter new password!';
@@ -308,7 +293,13 @@ class _RegisterScreenState extends State<RegisterScreen> {
                             PrimaryTextInput(
                               labelText: 'Confirm Password...',
                               controller: _confirmPasswordController,
-                              obscureText: _obscureConfirmPassword,
+                              obscureText: _obscurePassword,
+                              suffixIcon: Icon(
+                              color: Theme.of(context).primaryColor,
+                              _obscurePassword
+                                  ? Icons.visibility
+                                  : Icons.visibility_off,
+                            ),
                               validator: (value) {
                                 if (value == null || value.isEmpty) {
                                   return 'Please confirm password!';

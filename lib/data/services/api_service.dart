@@ -5,7 +5,6 @@ class ApiService {
   final Dio _dio;
   final String baseUrl;
 
-  // ApiService(this._dio, {required this.baseUrl});
   ApiService(this._dio, {required this.baseUrl}) {
     _dio.options.headers['Accept'] = 'application/json';
   }
@@ -38,17 +37,9 @@ class ApiService {
 
   Future<Response> post(String endpoint, {dynamic data}) async {
     try {
-      if (kDebugMode) {
-        print('Request Data: $data');
-      }
       return await _dio.post(
         '$baseUrl$endpoint',
         data: data,
-        options: Options(
-          headers: {
-            'Accept': 'application/json',
-          },
-        ),
       );
     } on DioException catch (e, stackTrace) {
       if (kDebugMode) {

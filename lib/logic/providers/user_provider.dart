@@ -10,26 +10,31 @@ class UserProvider with ChangeNotifier {
 
   UserModel? get user => _user;
 
+  bool get isLoggedIn => _user != null;
+
   // Fetch user data with userId parameter
-  Future<void> fetchUser(String userId) async {
+  Future<void> fetchUser() async {
     try {
-      _user = await userRepository.getUser(userId);
+      _user = await userRepository.getUser();
       notifyListeners();
     } catch (error) {
-      // Handle errors or show a message to the user
       print('Failed to fetch user: $error');
-      _user = null; // Optional: Reset user if there's an error
-      // Optionally, you might want to show an error message to the user
+      _user = null;
     }
   }
 
-  // Method to update the user in the provider
+  Future<UserModel?> getUser() async {
+    if (_user == null) {
+      await fetchUser();
+    }
+    return _user;
+  }
+
   void updateUser(UserModel user) {
     _user = user;
     notifyListeners();
   }
 
-  // Method to clear user data in the provider
   void clearUser() {
     _user = null;
     notifyListeners();
