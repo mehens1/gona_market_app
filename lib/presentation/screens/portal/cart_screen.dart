@@ -170,7 +170,6 @@ class CartSummary extends StatelessWidget {
         children: [
           Text(
             'Total: ${NumberFormat.simpleCurrency(locale: 'en_NG', name: '₦').format(total)}',
-            // {NumberFormat.simpleCurrency(locale: 'en_NG', name: 'N')}
 
             style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
           ),
@@ -182,11 +181,12 @@ class CartSummary extends StatelessWidget {
               // Add checkout logic here
               if (total == 0) {
                 CustomSnackbar.show(context, ('No item in Cart Yet!'));
+                return;
               }
               if (user == null) {
                 CustomSnackbar.show(context, ('You have to login to perform this operation'));
+                return;
               }
-
               Navigator.pushNamed(context, AppRoutes.checkout);
             },
             child:

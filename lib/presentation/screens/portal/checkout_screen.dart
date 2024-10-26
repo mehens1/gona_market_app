@@ -8,15 +8,12 @@ import 'package:provider/provider.dart';
 
 // Class to hold delivery information.
 class DeliveryInfo {
-  // The following line was commented out and can be removed if not used.
-  // final String userId; // If userId is not needed, remove it.
   final String fullName;
   final String phoneNumber;
   final String email;
   final String address;
 
   DeliveryInfo({
-    // required this.userId, // Uncomment if userId is needed.
     required this.fullName,
     required this.phoneNumber,
     required this.email,
@@ -217,8 +214,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                     ],
                   ),
                 ),
-                SizedBox(height: 20),
-
+                const SizedBox(height: 20),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
