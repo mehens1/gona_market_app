@@ -1,3 +1,4 @@
+import 'package:gona_market_app/data/models/category_model.dart';
 import 'package:gona_market_app/data/models/guage_model.dart';
 
 class ProductModel {
@@ -7,8 +8,8 @@ class ProductModel {
   final String description;
   final String image;
   final String? qtyAvailable;
-  final String? category;
-  final Guage? guage;
+  final CategoryModel? category;
+  final GuageModel? guage;
   final String? addedBy;
   final String? createdAt;
   final String? updatedAt;
@@ -22,7 +23,7 @@ class ProductModel {
     this.qtyAvailable,
     this.category,
     this.guage,
-    this.addedBy,
+    required this.addedBy,
     this.createdAt,
     this.updatedAt,
   });
@@ -35,12 +36,13 @@ class ProductModel {
       description: json['description'],
       image: json['image'],
       qtyAvailable: json['qty_available']?.toString(),
-      category: json['category'],
-      guage: json['guage'] != null ? Guage.fromJson(json['guage']) : null,
-      addedBy: json['added_by'],
+      category: json['category'] != null ? CategoryModel.fromJson(json['category']) : null,
+      guage: json['guage'] != null ? GuageModel.fromJson(json['guage']) : null,
+      // addedBy: UserModel.fromJson(json['added_by']),
+      addedBy: json['added_by']?.toString(),
       createdAt: json['created_at'],
       updatedAt: json['updated_at'],
-    );
+    ); 
   }
 
   Map<String, dynamic> toJson() {
@@ -57,5 +59,10 @@ class ProductModel {
       'created_at': createdAt,
       'updated_at': updatedAt,
     };
+  }
+
+  @override
+  String toString() {
+    return 'ProductModel{id: $id, title: $title, price: $price, description: $description, image: $image, qtyAvailable: $qtyAvailable, category: $category, guage: $guage, addedBy: $addedBy, createdAt: $createdAt, updatedAt: $updatedAt}';
   }
 }

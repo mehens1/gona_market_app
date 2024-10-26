@@ -4,6 +4,7 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:get_it/get_it.dart';
 import 'package:dio/dio.dart';
 import 'package:gona_market_app/app/router.dart';
+import 'package:gona_market_app/data/repositories/cart_repository.dart';
 import 'package:gona_market_app/data/repositories/lga_repository.dart';
 import 'package:gona_market_app/data/repositories/product_repository.dart';
 import 'package:gona_market_app/data/repositories/states_repository.dart';
@@ -26,18 +27,20 @@ void setupLocator() {
   final getIt = GetIt.instance;
   getIt.registerLazySingleton(() => Dio());
 
-  final baseUrl = dotenv.env['API_URL'] ?? 'https://api.example.com';
+  final baseUrl = dotenv.env['API_URL'] ?? '';
   
   getIt.registerLazySingleton<ApiService>(() => ApiService(getIt<Dio>(), baseUrl: baseUrl));
   getIt.registerLazySingleton(() => UserRepository(getIt<ApiService>()));
   getIt.registerLazySingleton(() => ProductRepository(getIt<ApiService>()));
   getIt.registerLazySingleton(() => StatesRepository(getIt<ApiService>()));
   getIt.registerLazySingleton(() => LGARepository(getIt<ApiService>()));
+  getIt.registerLazySingleton(() => CartRepository(getIt<ApiService>()));
   
   getIt.registerLazySingleton(() => UserProvider(getIt<UserRepository>()));
   getIt.registerLazySingleton(() => ProductProvider(getIt<ProductRepository>()));
   getIt.registerLazySingleton(() => StatesProvider(getIt<StatesRepository>()));
   getIt.registerLazySingleton(() => LGAProvider(getIt<LGARepository>()));
+  getIt.registerLazySingleton(() => CartProvider(getIt<CartRepository>()));
 
   getIt.registerLazySingleton(() => AuthService(getIt<ApiService>()));
   getIt.registerLazySingleton(() => TokenService());

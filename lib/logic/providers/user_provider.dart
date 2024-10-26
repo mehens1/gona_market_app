@@ -12,14 +12,15 @@ class UserProvider with ChangeNotifier {
 
   bool get isLoggedIn => _user != null;
 
-  // Fetch user data with userId parameter
   Future<void> fetchUser() async {
     try {
       _user = await userRepository.getUser();
-      notifyListeners();
+      if(_user != null){
+        notifyListeners();
+      }
     } catch (error) {
-      print('Failed to fetch user: $error');
       _user = null;
+      notifyListeners();
     }
   }
 
@@ -33,6 +34,10 @@ class UserProvider with ChangeNotifier {
   void updateUser(UserModel user) {
     _user = user;
     notifyListeners();
+  }
+
+  Future<void> cacheUser(UserModel user) async {
+    await userRepository.cacheUser(user);
   }
 
   void clearUser() {

@@ -33,6 +33,8 @@ class LoginProvider with ChangeNotifier {
 
         userProvider.updateUser(userModel);
         await tokenService.saveToken(accessToken);
+        await userProvider.cacheUser(userModel);
+
       } else {
         _errorMessage = loginResponse.data['message'];
         throw Exception(_errorMessage);

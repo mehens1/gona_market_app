@@ -1,5 +1,4 @@
 import 'package:dio/dio.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:gona_market_app/core/utils/show_error_dialog.dart';
@@ -8,6 +7,7 @@ import 'package:gona_market_app/core/widgets/custom_snackbar.dart';
 import 'package:gona_market_app/core/widgets/text_inputs.dart';
 import 'package:gona_market_app/data/services/api_service.dart';
 import 'package:gona_market_app/data/services/auth_service.dart';
+import 'package:gona_market_app/logic/providers/cart_provider.dart';
 import 'package:gona_market_app/logic/providers/login_provider.dart';
 import 'package:gona_market_app/presentation/routes/app_routes.dart';
 import 'package:provider/provider.dart';
@@ -61,6 +61,9 @@ class _LoginScreenState extends State<LoginScreen> {
         await Provider.of<LoginProvider>(context, listen: false)
             .login(loginData);
 
+        await Provider.of<CartProvider>(context, listen: false)
+            .syncCartWithUserProfile();
+
         CustomSnackbar.show(context, 'Login Successsful!');
 
         Navigator.pop(context);
@@ -70,9 +73,6 @@ class _LoginScreenState extends State<LoginScreen> {
               context, AppRoutes.accountUnderVerification);
         } else {
           showErrorDialog(context, 'Login Error!', error.toString());
-          if (kDebugMode) {
-            print('login try catch error: $error');
-          }
         }
       } finally {
         setState(() {

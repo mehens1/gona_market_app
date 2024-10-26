@@ -23,7 +23,6 @@ class UserModel {
     this.avatarUrl,
   });
 
-  // Factory method to create a UserModel from a JSON object
   factory UserModel.fromJson(Map<String, dynamic> json) {
     return UserModel(
       id: json['id'],
@@ -35,11 +34,10 @@ class UserModel {
       address: json['address'],
       state: StateModel.fromJson(json['state']),
       lga: LgaModel.fromJson(json['lga']),
-      avatarUrl: json['avatar_url'],
+      avatarUrl: json['image_url'],
     );
   }
 
-  // Method to convert a UserModel to a JSON object
   Map<String, dynamic> toJson() {
     return {
       'id': id,
@@ -76,8 +74,6 @@ class StateModel {
     };
   }
 }
-
-// LgaModel to represent local government area data
 class LgaModel {
   final int id;
   final String lgaName;
