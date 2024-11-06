@@ -4,6 +4,7 @@ import 'package:gona_market_app/core/widgets/custom_snackbar.dart';
 import 'package:gona_market_app/logic/providers/user_provider.dart';
 import 'package:gona_market_app/presentation/routes/app_routes.dart';
 import 'package:provider/provider.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({super.key});
@@ -69,11 +70,21 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           .withOpacity(0.1),
                     ),
                   ),
-                  CircleAvatar(
-                    radius: screenWidth * 0.2,
-                    backgroundImage: NetworkImage(
-                        user?.avatarUrl ?? 'https://via.placeholder.com/150'),
-                  ),
+                  user?.avatarUrl != null
+                      ? CircleAvatar(
+                          radius: screenWidth * 0.2,
+                          backgroundImage:
+                              NetworkImage(user!.avatarUrl.toString()),
+                        )
+                      : ClipOval(
+                          child: SvgPicture.asset(
+                            'assets/images/svg/user_white.svg',
+                            width: screenWidth * 0.2,
+                            height: screenWidth * 0.2,
+                            fit: BoxFit.cover,
+                            color: Theme.of(context).colorScheme.primary,
+                          ),
+                        ),
                 ],
               ),
             ),
@@ -117,14 +128,20 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       GestureDetector(
                         child: Text(
                           'Logout',
-                          style: TextStyle(color: Theme.of(context).colorScheme.secondary, fontSize: 20, fontWeight: FontWeight.bold),
+                          style: TextStyle(
+                              color: Theme.of(context).colorScheme.secondary,
+                              fontSize: 20,
+                              fontWeight: FontWeight.bold),
                         ),
                       ),
                       const SizedBox(height: 20),
                       GestureDetector(
-                        child: Text('Rate This App.', style: TextStyle(color: Theme.of(context).colorScheme.primary,
+                        child: Text(
+                          'Rate This App.',
+                          style: TextStyle(
+                            color: Theme.of(context).colorScheme.primary,
+                          ),
                         ),
-                      ),
                       ),
                     ],
                   ),
@@ -145,13 +162,14 @@ class _ProfileScreenState extends State<ProfileScreen> {
       onTap: () {
         if (title == 'My Store') {
           if (kDebugMode) {
-             Navigator.pushNamed(context, AppRoutes.myStore);
+            Navigator.pushNamed(context, AppRoutes.myStore);
           }
           return;
         }
 
         print("No selection");
-        CustomSnackbar.show(context, '$title feature is yet to be implemented!');
+        CustomSnackbar.show(
+            context, '$title feature is yet to be implemented!');
       },
     );
   }
