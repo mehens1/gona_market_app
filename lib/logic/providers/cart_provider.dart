@@ -3,22 +3,21 @@ import 'package:gona_market_app/data/models/cart_item_model.dart';
 import 'package:gona_market_app/data/models/product_model.dart';
 import 'package:gona_market_app/data/repositories/cart_repository.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'dart:convert'; // For jsonEncode and jsonDecode
+import 'dart:convert';
 
 class CartProvider with ChangeNotifier {
   List<CartItemModel> _cartItems = [];
   final CartRepository _cartRepository;
 
   CartProvider(this._cartRepository) {
-    _loadLocalCart(); // Load the local cart on initialization
+    _loadLocalCart();
   }
 
   int get itemCount => _cartItems.length;
   List<CartItemModel> get cartItems => _cartItems;
 
   double get totalPrice {
-    return _cartItems.fold(
-        0, (total, item) => total + (item.product.price * item.quantity));
+    return _cartItems.fold(0, (total, item) => total + (item.product.price * item.quantity));
   }
 
   void addItem(ProductModel product) {

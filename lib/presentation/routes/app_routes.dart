@@ -8,8 +8,10 @@ import 'package:gona_market_app/presentation/screens/auth/register_screen.dart';
 import 'package:gona_market_app/presentation/screens/auth/terms_and_condition.dart';
 import 'package:gona_market_app/presentation/screens/portal/cart_screen.dart';
 import 'package:gona_market_app/presentation/screens/portal/checkout_screen.dart';
+import 'package:gona_market_app/presentation/screens/portal/my_store_screen.dart';
 import 'package:gona_market_app/presentation/screens/portal/product_details_screen.dart';
 import 'package:gona_market_app/presentation/screens/portal/profile_screen.dart';
+import 'package:gona_market_app/presentation/screens/portal/upload_product_screen.dart';
 import 'package:gona_market_app/presentation/screens/splash_screen.dart';
 import 'package:gona_market_app/presentation/screens/portal/home_screen.dart';
 
@@ -26,6 +28,8 @@ class AppRoutes {
   static const String checkout = '/checkout';
   static const String productDetails = '/product-detail';
   static const String userProfile = '/user-profile';
+  static const String myStore = '/my-store';
+  static const String uploadProduct = '/upload-product';
 
   // Define a method to generate routes
   static Route<dynamic> generateRoute(RouteSettings settings) {
@@ -58,13 +62,16 @@ class AppRoutes {
         return MaterialPageRoute(builder: (_) => CartScreen());
       case checkout:
         return MaterialPageRoute(builder: (_) => CheckoutScreen());
+      case myStore:
+        return MaterialPageRoute(builder: (_) => MyStoreScreen());
+      case uploadProduct:
+        return MaterialPageRoute(builder: (_) => ProductUploadScreen());
       default:
         return MaterialPageRoute(builder: (_) => const UndefinedRouteScreen());
     }
   }
 }
 
-// Screen for undefined routes
 class UndefinedRouteScreen extends StatelessWidget {
   const UndefinedRouteScreen({super.key});
 
@@ -81,7 +88,6 @@ class UndefinedRouteScreen extends StatelessWidget {
   }
 }
 
-// Arguments class for ProductScreen
 class ProductScreenArguments {
   final String productId;
 

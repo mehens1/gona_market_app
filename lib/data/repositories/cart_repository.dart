@@ -35,8 +35,7 @@ class CartRepository {
   }
 
   double getTotalAmount() {
-    return cart.items
-        .fold(0, (total, item) => total + (item.product.price * item.quantity));
+    return cart.items.fold(0, (total, item) => total + (item.product.price * item.quantity));
   }
 
   Future<void> addProductToUserCart(ProductModel product) async {

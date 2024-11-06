@@ -5,7 +5,9 @@ import 'package:get_it/get_it.dart';
 import 'package:dio/dio.dart';
 import 'package:gona_market_app/app/router.dart';
 import 'package:gona_market_app/data/repositories/cart_repository.dart';
+import 'package:gona_market_app/data/repositories/categories_repository.dart';
 import 'package:gona_market_app/data/repositories/lga_repository.dart';
+import 'package:gona_market_app/data/repositories/my_product_repository.dart';
 import 'package:gona_market_app/data/repositories/product_repository.dart';
 import 'package:gona_market_app/data/repositories/states_repository.dart';
 import 'package:gona_market_app/data/repositories/user_repository.dart';
@@ -14,8 +16,10 @@ import 'package:gona_market_app/app/theme.dart';
 import 'package:gona_market_app/data/services/auth_service.dart';
 import 'package:gona_market_app/data/services/token_service.dart';
 import 'package:gona_market_app/logic/providers/cart_provider.dart';
+import 'package:gona_market_app/logic/providers/categories_provider.dart';
 import 'package:gona_market_app/logic/providers/lga_provider.dart';
 import 'package:gona_market_app/logic/providers/login_provider.dart';
+import 'package:gona_market_app/logic/providers/my_product_provider.dart';
 import 'package:gona_market_app/logic/providers/order_provider.dart';
 import 'package:gona_market_app/logic/providers/product_provider.dart';
 import 'package:gona_market_app/logic/providers/states_provider.dart';
@@ -32,15 +36,19 @@ void setupLocator() {
   getIt.registerLazySingleton<ApiService>(() => ApiService(getIt<Dio>(), baseUrl: baseUrl));
   getIt.registerLazySingleton(() => UserRepository(getIt<ApiService>()));
   getIt.registerLazySingleton(() => ProductRepository(getIt<ApiService>()));
+  getIt.registerLazySingleton(() => MyProductRepository(getIt<ApiService>()));
   getIt.registerLazySingleton(() => StatesRepository(getIt<ApiService>()));
   getIt.registerLazySingleton(() => LGARepository(getIt<ApiService>()));
   getIt.registerLazySingleton(() => CartRepository(getIt<ApiService>()));
+  getIt.registerLazySingleton(() => CategoryRepository(getIt<ApiService>()));
   
   getIt.registerLazySingleton(() => UserProvider(getIt<UserRepository>()));
   getIt.registerLazySingleton(() => ProductProvider(getIt<ProductRepository>()));
+  getIt.registerLazySingleton(() => MyProductProvider(getIt<MyProductRepository>()));
   getIt.registerLazySingleton(() => StatesProvider(getIt<StatesRepository>()));
   getIt.registerLazySingleton(() => LGAProvider(getIt<LGARepository>()));
   getIt.registerLazySingleton(() => CartProvider(getIt<CartRepository>()));
+  getIt.registerLazySingleton(() => CategoryProvider(getIt<CategoryRepository>()));
 
   getIt.registerLazySingleton(() => AuthService(getIt<ApiService>()));
   getIt.registerLazySingleton(() => TokenService());
@@ -61,10 +69,13 @@ void main() async {
       providers: [
         ChangeNotifierProvider(create: (_) => GetIt.instance<UserProvider>()),
         ChangeNotifierProvider(create: (_) => GetIt.instance<ProductProvider>()),
+        ChangeNotifierProvider(create: (_) => GetIt.instance<MyProductProvider>()),
         ChangeNotifierProvider(create: (_) => GetIt.instance<CartProvider>()),
         ChangeNotifierProvider(create: (_) => GetIt.instance<OrderProvider>()),
         ChangeNotifierProvider(create: (_) => GetIt.instance<StatesProvider>()),
         ChangeNotifierProvider(create: (_) => GetIt.instance<LGAProvider>()),
+        ChangeNotifierProvider(create: (_) => GetIt.instance<CategoryProvider>()),
+        // ChangeNotifierProvider(create: (_) => GetIt.instance<LGAProvider>()),
         ChangeNotifierProvider(create: (_) => GetIt.instance<LoginProvider>()),
       ],
       child: const MyApp(),

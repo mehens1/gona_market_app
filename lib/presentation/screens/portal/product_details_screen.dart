@@ -126,7 +126,8 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                               style: TextStyle(fontWeight: FontWeight.bold)),
                           Text(product.category!.category.toString()),
                         ],
-                        ...[
+
+                        if (product.description != null) ...[
                           const SizedBox(height: 16),
                           Text(
                             'Description:',
@@ -135,7 +136,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                                 color: Theme.of(context).colorScheme.primary),
                           ),
                           Text(
-                            product.description,
+                            product.description ?? 'No description available',
                             textAlign: TextAlign.justify,
                             style: const TextStyle(color: Colors.black),
                           ),

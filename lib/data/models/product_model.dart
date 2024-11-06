@@ -4,8 +4,8 @@ import 'package:gona_market_app/data/models/guage_model.dart';
 class ProductModel {
   final int id;
   final String title;
-  final int price;
-  final String description;
+  final double price;
+  final String? description;
   final String image;
   final String? qtyAvailable;
   final CategoryModel? category;
@@ -32,13 +32,12 @@ class ProductModel {
     return ProductModel(
       id: json['id'],
       title: json['title'],
-      price: json['price'],
-      description: json['description'],
+      price: (json['price'] is num) ? (json['price'] as num).toDouble() : 0.0,
+      description: json['description'] as String?,
       image: json['image'],
       qtyAvailable: json['qty_available']?.toString(),
       category: json['category'] != null ? CategoryModel.fromJson(json['category']) : null,
       guage: json['guage'] != null ? GuageModel.fromJson(json['guage']) : null,
-      // addedBy: UserModel.fromJson(json['added_by']),
       addedBy: json['added_by']?.toString(),
       createdAt: json['created_at'],
       updatedAt: json['updated_at'],

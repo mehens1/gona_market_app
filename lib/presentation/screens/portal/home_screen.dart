@@ -1,7 +1,9 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:gona_market_app/core/widgets/text_inputs.dart';
 import 'package:gona_market_app/data/models/product_model.dart';
 import 'package:gona_market_app/logic/providers/cart_provider.dart';
+import 'package:gona_market_app/logic/providers/categories_provider.dart';
 import 'package:gona_market_app/logic/providers/product_provider.dart';
 import 'package:gona_market_app/logic/providers/user_provider.dart';
 import 'package:gona_market_app/presentation/routes/app_routes.dart';
@@ -22,8 +24,11 @@ class _HomeScreenState extends State<HomeScreen> {
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
+      final categoryProvider =
+          Provider.of<CategoryProvider>(context, listen: false);
       final productProvider =
           Provider.of<ProductProvider>(context, listen: false);
+      categoryProvider.fetchCategories();
       productProvider.fetchProducts();
     });
   }
@@ -31,6 +36,7 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     final userProvider = Provider.of<UserProvider>(context);
+    final categoryProvider = Provider.of<CategoryProvider>(context);
     final cartProvider = Provider.of<CartProvider>(context);
     final user = userProvider.user;
     double screenWidth = MediaQuery.of(context).size.width;
@@ -53,8 +59,7 @@ class _HomeScreenState extends State<HomeScreen> {
           Padding(
             padding: const EdgeInsets.only(right: 20.0),
             child: Stack(
-              alignment: Alignment
-                  .topRight, // Align the badge to the top right of the cart icon
+              alignment: Alignment.topRight,
               children: [
                 IconButton(
                   icon: Icon(
@@ -124,18 +129,20 @@ class _HomeScreenState extends State<HomeScreen> {
         children: [
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-            child: SingleChildScrollView(
-              scrollDirection: Axis.horizontal,
-              child: Row(
-                children: [
-                  _buildCategoryTab('All', true),
-                  _buildCategoryTab('Fruits', false),
-                  _buildCategoryTab('Grains', false),
-                  _buildCategoryTab('Vegetables', false),
-                  _buildCategoryTab('Perishable', false),
-                  _buildCategoryTab('Calories', false),
-                ],
-              ),
+            child: Consumer<CategoryProvider>(
+              builder: (context, categoryProvider, child) {
+                return SingleChildScrollView(
+                  scrollDirection: Axis.horizontal,
+                  child: Row(
+                    children: [
+                      _buildCategoryTab('All', true),
+                      if (categoryProvider.categories.isNotEmpty)
+                        ...categoryProvider.categories.map((category) =>
+                            _buildCategoryTab(category['category'], false)),
+                    ],
+                  ),
+                );
+              },
             ),
           ),
           Padding(
@@ -297,6 +304,7 @@ class _HomeScreenState extends State<HomeScreen> {
               child: Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 10),
                 child: Text(
+                  // 'pric',
                   formatCurrency.format(product.price),
                   style: TextStyle(
                     color: Theme.of(context).colorScheme.secondary,

@@ -20,8 +20,6 @@ class _CartScreenState extends State<CartScreen> {
     final userProvider = Provider.of<UserProvider>(context);
     final user = userProvider.user;
 
-    print('user mehens $user');
-
     final cartItems = cartProvider.cartItems;
 
     return Scaffold(
