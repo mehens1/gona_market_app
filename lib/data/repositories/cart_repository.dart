@@ -1,33 +1,59 @@
-import 'dart:convert';
-import 'package:gona_market_app/core/services/local_storage_service.dart';
-import 'package:gona_market_app/data/models/cart_model.dart';
 import 'package:gona_market_app/data/models/cart_item_model.dart';
+import 'package:gona_market_app/data/models/cart_model.dart';
+import 'package:gona_market_app/data/models/product_model.dart';
+import 'package:gona_market_app/data/services/api_service.dart';
 
 class CartRepository {
-  final LocalStorageService localStorageService;
+  final ApiService apiService;
 
-  CartRepository(this.localStorageService);
+  CartModel cart = CartModel(id: DateTime.now().millisecondsSinceEpoch.toString(), items: []);
 
-  Future<CartModel> getCart() async {
-    final cartJsonString = await localStorageService.get('cart');
+  CartRepository(this.apiService);
 
-    if (cartJsonString == null) {
-      return CartModel(id: '0', items: []);
+  List<CartItemModel> getItems() {
+    print('from cart repo: $cart');
+    return cart.items;
+  }
+
+  void addItem(CartItemModel cartItem) {
+    final existingItemIndex =
+        cart.items.indexWhere((item) => item.product.id == cartItem.product.id);
+
+    if (existingItemIndex >= 0) {
+      cart.items[existingItemIndex].quantity += cartItem.quantity;
+    } else {
+      cart.items.add(cartItem);
     }
-
-    final Map<String, dynamic> cartJson = jsonDecode(cartJsonString);
-    return CartModel.fromJson(cartJson);
   }
 
-  Future<void> addItemToCart(CartItemModel item) async {
-    final cart = await getCart();
-    cart.items.add(item);
-    await localStorageService.set('cart', cart.toJsonString());
-  }
-
-  Future<void> removeItemFromCart(String itemId) async {
-    final cart = await getCart();
+  void removeItem(String itemId) {
     cart.items.removeWhere((item) => item.id == itemId);
-    await localStorageService.set('cart', cart.toJsonString());
+  }
+
+  void clearCart() {
+    cart.items.clear();
+  }
+
+  double getTotalAmount() {
+    return cart.items.fold(0, (total, item) => total + (item.product.price * item.quantity));
+  }
+
+  Future<void> addProductToUserCart(ProductModel product) async {
+    CartItemModel cartItem = CartItemModel(
+      id: product.id.toString(),
+      product: product,
+      quantity: 1,
+    );
+
+    addItem(cartItem);
+
+    final response = await apiService.post('/cart', data: {
+      'productId': product.id,
+      'quantity': cartItem.quantity,
+    });
+
+    if (response.statusCode != 200) {
+      throw Exception('Failed to add product to cart');
+    }
   }
 }

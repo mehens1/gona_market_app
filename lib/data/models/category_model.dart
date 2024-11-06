@@ -1,15 +1,15 @@
-class GuageModel {
+class CategoryModel {
   final int id;
-  final String name;
+  final String category;
   final DateTime? createdAt;
   final DateTime? updatedAt;
 
-  GuageModel({required this.id, required this.name, this.createdAt, this.updatedAt});
+  CategoryModel({required this.id, required this.category, this.createdAt, this.updatedAt});
 
-  factory GuageModel.fromJson(Map<String, dynamic> json) {
-    return GuageModel(
+  factory CategoryModel.fromJson(Map<String, dynamic> json) {
+    return CategoryModel(
       id: json['id'],
-      name: json['name'],
+      category: json['category'],
       createdAt: json['created_at'] != null ? DateTime.parse(json['created_at']) : null,
       updatedAt: json['updated_at'] != null ? DateTime.parse(json['updated_at']) : null,
     );
@@ -18,7 +18,7 @@ class GuageModel {
   Map<String, dynamic> toJson() {
     return {
       'id': id,
-      'name': name,
+      'category': category,
       'created_at': createdAt?.toIso8601String(),
       'updated_at': updatedAt?.toIso8601String(),
     };

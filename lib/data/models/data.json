@@ -1,0 +1,68 @@
+[
+    {
+        "id": 2,
+        "title": "Red Beans",
+        "price": 2900,
+        "description": "Lorem ipsum dolor sit amet consectetur adipisicing elit. Molestiae nam explicabo iste dicta est adipisci, praesentium delectus numquam magnam, hic officia, exercitationem quidem! Vero, suscipit debitis atque doloremque saepe sunt?",
+        "image": "https:\/\/i0.wp.com\/images-prod.healthline.com\/hlcmsresource\/images\/AN_images\/kidney-beans-1296x728-feature.jpg?w=1155&h=1528",
+        "qty_available": 18,
+        "category": {
+            "id": 1,
+            "category": "Grain",
+            "added_by": 7,
+            "created_at": "2024-10-10T16:42:04.000000Z",
+            "updated_at": "2024-10-10T16:42:04.000000Z"
+        },
+        "guage": {
+            "id": 1,
+            "name": "Major",
+            "created_at": "2024-10-10T16:41:25.000000Z",
+            "updated_at": "2024-10-10T16:41:25.000000Z"
+        },
+        "added_by": {
+            "id": 7,
+            "email": "mehens1@gmail.com",
+            "email_verified_at": null,
+            "otp": null,
+            "created_at": "2024-09-28T11:11:04.000000Z",
+            "updated_at": "2024-09-28T11:11:04.000000Z",
+            "phone_number": "08107100130",
+            "is_active": 1
+        },
+        "created_at": null,
+        "updated_at": null
+    },
+    {
+        "id": 3,
+        "title": "White Corn",
+        "price": 500,
+        "description": "Lorem ipsum dolor sit amet consectetur adipisicing elit. Molestiae nam explicabo iste dicta est adipisci, praesentium delectus numquam magnam, hic officia, exercitationem quidem! Vero, suscipit debitis atque doloremque saepe sunt?",
+        "image": "https:\/\/cdn.britannica.com\/74\/188774-050-EE919DCF\/corn-grits.jpg",
+        "qty_available": 26,
+        "category": {
+            "id": 1,
+            "category": "Grain",
+            "added_by": 7,
+            "created_at": "2024-10-10T16:42:04.000000Z",
+            "updated_at": "2024-10-10T16:42:04.000000Z"
+        },
+        "guage": {
+            "id": 1,
+            "name": "Major",
+            "created_at": "2024-10-10T16:41:25.000000Z",
+            "updated_at": "2024-10-10T16:41:25.000000Z"
+        },
+        "added_by": {
+            "id": 7,
+            "email": "mehens1@gmail.com",
+            "email_verified_at": null,
+            "otp": null,
+            "created_at": "2024-09-28T11:11:04.000000Z",
+            "updated_at": "2024-09-28T11:11:04.000000Z",
+            "phone_number": "08107100130",
+            "is_active": 1
+        },
+        "created_at": null,
+        "updated_at": null
+    }
+]

@@ -1,10 +1,10 @@
+// cart_model.dart
 import 'dart:convert';
-
-import 'package:gona_market_app/data/models/cart_item_model.dart';
+import 'cart_item_model.dart';
 
 class CartModel {
-  final String id;
-  final List<CartItemModel> items;
+  final String id; // Unique identifier for the cart
+  final List<CartItemModel> items; // List of items in the cart
 
   CartModel({
     required this.id,

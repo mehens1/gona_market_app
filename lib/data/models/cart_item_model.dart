@@ -1,31 +1,33 @@
-import 'package:gona_market_app/data/models/product_model.dart';
+import 'product_model.dart';
 
 class CartItemModel {
   final String id;
   final ProductModel product;
-  final int quantity;
+  int quantity;
+  String? imageUrl;
 
   CartItemModel({
     required this.id,
     required this.product,
-    required this.quantity,
+    this.quantity = 1,
+    this.imageUrl,
   });
 
-  // Factory method to create a CartItemModel from a JSON object
   factory CartItemModel.fromJson(Map<String, dynamic> json) {
     return CartItemModel(
       id: json['id'] as String,
       product: ProductModel.fromJson(json['product'] as Map<String, dynamic>),
       quantity: json['quantity'] as int,
+      imageUrl: json['imageUrl'] as String?,
     );
   }
 
-  // Method to convert a CartItemModel to a JSON object
   Map<String, dynamic> toJson() {
     return {
       'id': id,
       'product': product.toJson(),
       'quantity': quantity,
+      'imageUrl': imageUrl,
     };
   }
 }
