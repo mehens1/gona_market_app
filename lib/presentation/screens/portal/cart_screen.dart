@@ -55,7 +55,9 @@ class _CartScreenState extends State<CartScreen> {
 
                       return Container(
                         margin: const EdgeInsets.symmetric(
-                            vertical: 8.0, horizontal: 16.0),
+                          vertical: 8.0,
+                          horizontal: 16.0,
+                        ),
                         decoration: BoxDecoration(
                           color: Colors.white,
                           borderRadius: BorderRadius.circular(15),
@@ -64,8 +66,7 @@ class _CartScreenState extends State<CartScreen> {
                               color: Colors.grey.withOpacity(0.2),
                               spreadRadius: 2,
                               blurRadius: 5,
-                              offset:
-                                  const Offset(0, 3), // changes position of shadow
+                              offset: const Offset(0, 3),
                             ),
                           ],
                         ),
@@ -73,25 +74,33 @@ class _CartScreenState extends State<CartScreen> {
                           contentPadding: const EdgeInsets.all(16.0),
                           leading: CircleAvatar(
                             backgroundColor: Colors.grey[200],
-                            backgroundImage: NetworkImage(item.product.image),
                             child: ClipOval(
-                              child: Image.network(
-                                item.product.image,
-                                fit: BoxFit.cover,
-                                errorBuilder: (BuildContext context,
-                                    Object error, StackTrace? stackTrace) {
-                                  return Image.asset(
-                                    'assets/images/placeholder.png',
-                                    fit: BoxFit.cover,
-                                  );
-                                },
-                              ),
+                              child: item.product.image == null
+                                  ? Image.asset(
+                                      'assets/images/product_placeholder.png',
+                                      fit: BoxFit.cover,
+                                    )
+                                  : Image.network(
+                                      item.product.image,
+                                      fit: BoxFit.cover,
+                                      errorBuilder: (BuildContext context,
+                                          Object error,
+                                          StackTrace? stackTrace) {
+                                        return Image.asset(
+                                          'assets/images/product_placeholder.png',
+                                          fit: BoxFit.cover,
+                                        );
+                                      },
+                                    ),
                             ),
                           ),
-                          title: Text(item.product.title),
-                          subtitle: Text(NumberFormat.simpleCurrency(
-                                  locale: 'en_NG', name: '₦')
-                              .format(item.product.price)),
+                          title: Text(
+                              item.product.title ?? '-'), // ✅ Correct placement
+                          subtitle: Text(
+                            NumberFormat.simpleCurrency(
+                                    locale: 'en_NG', name: '₦')
+                                .format(item.product.price),
+                          ),
                           trailing: Row(
                             mainAxisSize: MainAxisSize.min,
                             children: [
@@ -99,8 +108,10 @@ class _CartScreenState extends State<CartScreen> {
                                 icon: const Icon(Icons.remove_circle_outline),
                                 onPressed: () {
                                   if (item.quantity == 1) {
-                                    CustomSnackbar.show(context,
-                                        "You have only 1 quantity of '${item.product.title}' in your cart!");
+                                    CustomSnackbar.show(
+                                      context,
+                                      "You have only 1 quantity of '${item.product.title}' in your cart!",
+                                    );
                                     return;
                                   }
                                   cartProvider.removeItem(item.product);
@@ -116,8 +127,10 @@ class _CartScreenState extends State<CartScreen> {
                                       0;
 
                                   if (quantity == qtyAvailable) {
-                                    CustomSnackbar.show(context,
-                                        "We only have the total of ${item.product.qtyAvailable} available in store for '${item.product.title}'");
+                                    CustomSnackbar.show(
+                                      context,
+                                      "We only have the total of ${item.product.qtyAvailable} available in store for '${item.product.title}'",
+                                    );
                                     return;
                                   }
 
@@ -131,7 +144,9 @@ class _CartScreenState extends State<CartScreen> {
                     },
                   ),
           ),
-          CartSummary(user: user,),
+          CartSummary(
+            user: user,
+          ),
         ],
       ),
     );
@@ -168,7 +183,6 @@ class CartSummary extends StatelessWidget {
         children: [
           Text(
             'Total: ${NumberFormat.simpleCurrency(locale: 'en_NG', name: '₦').format(total)}',
-
             style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
           ),
           ElevatedButton(
@@ -182,7 +196,8 @@ class CartSummary extends StatelessWidget {
                 return;
               }
               if (user == null) {
-                CustomSnackbar.show(context, ('You have to login to perform this operation'));
+                CustomSnackbar.show(
+                    context, ('You have to login to perform this operation'));
                 return;
               }
               Navigator.pushNamed(context, AppRoutes.checkout);

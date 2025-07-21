@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:gona_market_app/core/widgets/custom_snackbar.dart';
 import 'package:gona_market_app/data/models/product_model.dart';
 import 'package:gona_market_app/logic/providers/cart_provider.dart';
@@ -16,6 +17,7 @@ class ProductDetailsScreen extends StatefulWidget {
 
 class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
   late ProductModel product;
+
   @override
   void initState() {
     super.initState();
@@ -55,10 +57,30 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                     fit: BoxFit.cover,
                     loadingBuilder: (context, child, loadingProgress) {
                       if (loadingProgress == null) return child;
-                      return const Center(child: CircularProgressIndicator());
+                      return CircularProgressIndicator(
+                        color: Theme.of(context).colorScheme.secondary,
+                      );
                     },
                     errorBuilder: (context, error, stackTrace) {
-                      return const Icon(Icons.error);
+                      SchedulerBinding.instance.addPostFrameCallback((_) {
+                        CustomSnackbar.show(context,
+                            "Looks like network issues, cant load product image, please reload!");
+                      });
+
+                      return Center(
+                        child: SizedBox(
+                          height: 300,
+                          child: Icon(
+                            Icons.image,
+                            color: Theme.of(context).colorScheme.secondary,
+                          ),
+                        ),
+                      );
+                      return Image.asset(
+                        'assets/images/product_placeholder.png',
+                        // height: 300,
+                        fit: BoxFit.cover,
+                      );
                     },
                   ),
                   Padding(
@@ -95,18 +117,15 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                           ],
                         ),
                         Row(
-                          children: [
-                            Icon(Icons.star,
-                                color: Theme.of(context).colorScheme.secondary),
-                            Icon(Icons.star,
-                                color: Theme.of(context).colorScheme.secondary),
-                            Icon(Icons.star,
-                                color: Theme.of(context).colorScheme.secondary),
-                            Icon(Icons.star,
-                                color: Theme.of(context).colorScheme.secondary),
-                            Icon(Icons.star_border,
-                                color: Theme.of(context).colorScheme.secondary),
-                          ],
+                          children: List.generate(4, (index) {
+                            return Icon(Icons.star,
+                                color: Theme.of(context).colorScheme.secondary);
+                          })
+                            ..add(
+                              Icon(Icons.star_border,
+                                  color:
+                                      Theme.of(context).colorScheme.secondary),
+                            ),
                         ),
                         if (product.qtyAvailable != null) ...[
                           const SizedBox(height: 16),
@@ -126,7 +145,6 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                               style: TextStyle(fontWeight: FontWeight.bold)),
                           Text(product.category!.category.toString()),
                         ],
-
                         if (product.description != null) ...[
                           const SizedBox(height: 16),
                           Text(
@@ -200,13 +218,6 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
           ),
         ],
       ),
-    );
-  }
-
-  Widget _colorChip(BuildContext context, Color color) {
-    return Chip(
-      label: Container(width: 20, height: 20, color: color),
-      backgroundColor: Colors.grey[200],
     );
   }
 }

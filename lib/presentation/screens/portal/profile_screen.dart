@@ -42,7 +42,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
           ),
         ),
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             Center(
               child: Stack(
@@ -121,32 +121,33 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       context, Icons.location_on, 'Shopping Address'),
                   _buildListTile(context, Icons.store, 'My Store'),
                   _buildListTile(context, Icons.history, 'Order History'),
-                  _buildListTile(context, Icons.credit_card, 'Cards'),
+                  // _buildListTile(context, Icons.credit_card, 'Cards'),
                   const SizedBox(height: 50),
-                  Column(
-                    children: [
-                      GestureDetector(
-                        child: Text(
-                          'Logout',
-                          style: TextStyle(
-                              color: Theme.of(context).colorScheme.secondary,
-                              fontSize: 20,
-                              fontWeight: FontWeight.bold),
-                        ),
-                      ),
-                      const SizedBox(height: 20),
-                      GestureDetector(
-                        child: Text(
-                          'Rate This App.',
-                          style: TextStyle(
-                            color: Theme.of(context).colorScheme.primary,
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
                 ],
               ),
+            ),
+
+            Column(
+              children: [
+                GestureDetector(
+                  child: Text(
+                    'Logout',
+                    style: TextStyle(
+                        color: Theme.of(context).colorScheme.secondary,
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold),
+                  ),
+                ),
+                const SizedBox(height: 20),
+                GestureDetector(
+                  child: Text(
+                    'Rate This App.',
+                    style: TextStyle(
+                      color: Theme.of(context).colorScheme.primary,
+                    ),
+                  ),
+                ),
+              ],
             ),
           ],
         ),
@@ -161,9 +162,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
       trailing: const Icon(Icons.arrow_forward_ios, size: 16),
       onTap: () {
         if (title == 'My Store') {
-          if (kDebugMode) {
-            Navigator.pushNamed(context, AppRoutes.myStore);
-          }
+          Navigator.pushNamed(context, AppRoutes.myStore);
+          return;
+        }
+        if (title == 'Order History') {
+          Navigator.pushNamed(context, AppRoutes.orders);
           return;
         }
 

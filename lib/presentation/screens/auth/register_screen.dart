@@ -1,7 +1,7 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:gona_market_app/core/utils/show_error_dialog.dart';
+import 'package:gona_market_app/core/utils/dialogModals.dart';
 import 'package:gona_market_app/core/widgets/button.dart';
 import 'package:gona_market_app/core/widgets/dropdown.dart';
 import 'package:gona_market_app/core/widgets/text_inputs.dart';
@@ -40,15 +40,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
   var selectedLGA;
   bool _isLoading = false;
   List<Map<String, dynamic>> localGovernments = [];
-
-  // String? _firstnameError;
-  // String? _lastnameError;
-  // String? _emailError;
-  // String? _phoneNumberError;
-  // String? _newPasswordError;
-  // String? _confirmPasswordError;
-  // String? _stateError;
-  // String? _lgaError;
 
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
@@ -277,12 +268,12 @@ class _RegisterScreenState extends State<RegisterScreen> {
                               labelText: 'New Password...',
                               controller: _newPasswordController,
                               obscureText: _obscurePassword,
-                            suffixIcon: Icon(
-                              color: Theme.of(context).primaryColor,
-                              _obscurePassword
-                                  ? Icons.visibility
-                                  : Icons.visibility_off,
-                            ),
+                              suffixIcon: Icon(
+                                color: Theme.of(context).primaryColor,
+                                _obscurePassword
+                                    ? Icons.visibility
+                                    : Icons.visibility_off,
+                              ),
                               validator: (value) {
                                 if (value == null || value.isEmpty) {
                                   return 'Please enter new password!';
@@ -295,11 +286,11 @@ class _RegisterScreenState extends State<RegisterScreen> {
                               controller: _confirmPasswordController,
                               obscureText: _obscurePassword,
                               suffixIcon: Icon(
-                              color: Theme.of(context).primaryColor,
-                              _obscurePassword
-                                  ? Icons.visibility
-                                  : Icons.visibility_off,
-                            ),
+                                color: Theme.of(context).primaryColor,
+                                _obscurePassword
+                                    ? Icons.visibility
+                                    : Icons.visibility_off,
+                              ),
                               validator: (value) {
                                 if (value == null || value.isEmpty) {
                                   return 'Please confirm password!';

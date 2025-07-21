@@ -17,9 +17,6 @@ class CategoryProvider extends ChangeNotifier {
 
     try {
       _categories = await categoryRepository.getCategories();
-      if (kDebugMode) {
-        print('Fetched Categories: $_categories');
-      }
     } catch (e) {
       if (kDebugMode) {
         print('Error fetching Categories: $e');

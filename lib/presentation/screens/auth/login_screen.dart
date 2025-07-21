@@ -1,7 +1,7 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
-import 'package:gona_market_app/core/utils/show_error_dialog.dart';
+import 'package:gona_market_app/core/utils/dialogModals.dart';
 import 'package:gona_market_app/core/widgets/button.dart';
 import 'package:gona_market_app/core/widgets/custom_snackbar.dart';
 import 'package:gona_market_app/core/widgets/text_inputs.dart';

@@ -15,18 +15,35 @@ class ProductUploadService {
     }
   }
 
-  Future<Response> uploadProduct(Map<String, dynamic> productData) async {
-    try {
-      final response = await apiService.post('/my-product/create', data: productData);
-      return response;
-    } catch (e) {
-      throw e.toString();
-    }
-  }
+  // Future<Response> uploadProduct(Map<String, dynamic> productData) async {
+  //   try {
+  //     // print('data from upload: $productData');
 
-  Future<Response> updateProductl(product) async {
+  //     final response = await apiService.post('/upload-product', data: productData );
+  //     print('response from upload: $response');
+  //     return response;
+  //   } catch (e) {
+  //     print('error from upload: ');
+  //     print(e);
+  //     throw e.toString();
+  //   }
+  // }
+  Future<Response> uploadProduct(FormData productData) async {
+  try {
+    final response = await apiService.post('/upload-product', data: productData);
+    print('response from upload: $response');
+    return response;
+  } catch (e) {
+    print('error from upload: ');
+    print(e);
+    throw e.toString();
+  }
+}
+
+  Future<Response> updateProduct(product) async {
     try {
-      final response = await apiService.put('/my-product/update', data: {'product': product});
+      final response = await apiService
+          .put('/my-product/update', data: {'product': product});
       return response;
     } catch (e) {
       rethrow;

@@ -15,7 +15,7 @@ class UserProvider with ChangeNotifier {
   Future<void> fetchUser() async {
     try {
       _user = await userRepository.getUser();
-      if(_user != null){
+      if (_user != null) {
         notifyListeners();
       }
     } catch (error) {

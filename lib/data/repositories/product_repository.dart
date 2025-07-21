@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:gona_market_app/data/models/product_model.dart';
 import 'package:gona_market_app/data/services/api_service.dart';
 
@@ -11,9 +12,9 @@ class ProductRepository {
 
     final productsData = response.data['data'];
 
-    if (productsData is List && productsData.isNotEmpty) {
-      print('testing is list => productsData: $productsData');
+    debugPrint('Products data: $productsData');
 
+    if (productsData is List && productsData.isNotEmpty) {
       final products = productsData
           .map((productJson) => ProductModel.fromJson(productJson))
           .toList();

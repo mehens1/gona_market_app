@@ -13,6 +13,7 @@ class ProductModel {
   final String? addedBy;
   final String? createdAt;
   final String? updatedAt;
+  final String? status;
 
   ProductModel({
     required this.id,
@@ -26,6 +27,7 @@ class ProductModel {
     required this.addedBy,
     this.createdAt,
     this.updatedAt,
+    this.status,
   });
 
   factory ProductModel.fromJson(Map<String, dynamic> json) {
@@ -36,12 +38,15 @@ class ProductModel {
       description: json['description'] as String?,
       image: json['image'],
       qtyAvailable: json['qty_available']?.toString(),
-      category: json['category'] != null ? CategoryModel.fromJson(json['category']) : null,
+      category: json['category'] != null
+          ? CategoryModel.fromJson(json['category'])
+          : null,
       guage: json['guage'] != null ? GuageModel.fromJson(json['guage']) : null,
       addedBy: json['added_by']?.toString(),
       createdAt: json['created_at'],
       updatedAt: json['updated_at'],
-    ); 
+      status: json['status'],
+    );
   }
 
   Map<String, dynamic> toJson() {
@@ -57,6 +62,7 @@ class ProductModel {
       'added_by': addedBy,
       'created_at': createdAt,
       'updated_at': updatedAt,
+      'status': status,
     };
   }
 

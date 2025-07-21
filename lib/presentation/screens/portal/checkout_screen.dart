@@ -1,12 +1,20 @@
+import 'dart:convert';
+
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:gona_market_app/core/utils/loadingModal.dart';
 import 'package:gona_market_app/core/widgets/button.dart';
 import 'package:gona_market_app/core/widgets/secondary_button.dart';
+import 'package:gona_market_app/data/services/api_service.dart';
 import 'package:gona_market_app/logic/providers/cart_provider.dart';
 import 'package:gona_market_app/logic/providers/user_provider.dart';
+import 'package:gona_market_app/data/repositories/order_repository.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
+import 'package:gona_market_app/core/utils/customBottomSheet.dart';
+import 'package:gona_market_app/core/utils/dialogModals.dart';
 
-// Class to hold delivery information.
 class DeliveryInfo {
   final String fullName;
   final String phoneNumber;
@@ -23,55 +31,65 @@ class DeliveryInfo {
 
 class _CheckoutScreenState extends State<CheckoutScreen> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-  bool saveCardDetails = false; // This variable is declared but not used.
+  late Dio _dio;
+  late ApiService _apiService;
+
+  bool saveCardDetails = false;
   String selectedPaymentType = '';
   DeliveryInfo? deliveryInfo;
-  bool _isLoading = false;
+  late bool _isLoading = false;
 
-  // Updates the delivery information.
+  late OrderRepository orderRepository;
+
+  @override
+  void initState() {
+    super.initState();
+    _dio = Dio();
+    _apiService = ApiService(_dio, baseUrl: dotenv.env['API_URL'] ?? '');
+    orderRepository = OrderRepository(_apiService);
+  }
+
+  final TextEditingController cardNumberController = TextEditingController();
+  final TextEditingController expMonthController = TextEditingController();
+  final TextEditingController expYearController = TextEditingController();
+  final TextEditingController cvvController = TextEditingController();
+  final TextEditingController pinController = TextEditingController();
+
+  final TextEditingController otpController = TextEditingController();
+
   void _updateDeliveryInfo(DeliveryInfo info) {
     setState(() {
       deliveryInfo = info;
     });
   }
 
-  // Confirm payment and process transaction.
   Future<void> _confirmAndPay(
       double total, String userId, String paymentType) async {
-    // Validate the form fields and delivery info.
     if (!(_formKey.currentState?.validate() ?? false)) {
-      _showErrorModal(context, "Please correct the errors in the form.");
+      showBottomSheetModal(context, "Please correct the errors in the form.");
       return;
     }
 
     if (deliveryInfo == null) {
-      _showErrorModal(context, "Please fill in your delivery information.");
+      showBottomSheetModal(
+          context, "Please fill in your delivery information.");
       return;
     }
 
     if (paymentType.isEmpty) {
-      _showErrorModal(context, "Please select a payment method to proceed.");
+      showBottomSheetModal(
+          context, "Please select a payment method to proceed.");
       return;
     }
 
-    // if(paymentType == )
     switch (paymentType.toLowerCase()) {
       case 'card':
         loadCardDetails(context);
         break;
       default:
     }
-
-    print("Mehens _formKey");
-    print(_formKey.toString());
-    print('');
-
-    print("Mehens paymentType");
-    print(paymentType);
-    print('');
   }
 
-  // Display card and allow user to put in card details
   void loadCardDetails(BuildContext context) {
     showModalBottomSheet(
       context: context,
@@ -110,15 +128,15 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text(
-                        '**** **** **** 1234', // Example card number
+                      const Text(
+                        '**** **** **** 1234',
                         style: TextStyle(
                           color: Colors.white,
                           fontSize: 24,
                           fontWeight: FontWeight.bold,
                         ),
                       ),
-                      SizedBox(height: 10),
+                      const SizedBox(height: 10),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
@@ -136,6 +154,16 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                                   SizedBox(
                                     width: 60,
                                     child: TextField(
+                                      maxLength: 2,
+                                      buildCounter: (context,
+                                              {required currentLength,
+                                              required isFocused,
+                                              maxLength}) =>
+                                          null,
+                                      textAlign: TextAlign.center,
+                                      textAlignVertical:
+                                          TextAlignVertical.center,
+                                      controller: expMonthController,
                                       decoration: InputDecoration(
                                         labelText: 'MM',
                                         filled: true,
@@ -149,10 +177,20 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                                       keyboardType: TextInputType.number,
                                     ),
                                   ),
-                                  SizedBox(width: 10),
+                                  const SizedBox(width: 10),
                                   SizedBox(
                                     width: 60,
                                     child: TextField(
+                                      maxLength: 2,
+                                      buildCounter: (context,
+                                              {required currentLength,
+                                              required isFocused,
+                                              maxLength}) =>
+                                          null,
+                                      textAlign: TextAlign.center,
+                                      textAlignVertical:
+                                          TextAlignVertical.center,
+                                      controller: expYearController,
                                       decoration: InputDecoration(
                                         labelText: 'YY',
                                         filled: true,
@@ -182,6 +220,15 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                               SizedBox(
                                 width: 60,
                                 child: TextField(
+                                  maxLength: 3,
+                                  buildCounter: (context,
+                                          {required currentLength,
+                                          required isFocused,
+                                          maxLength}) =>
+                                      null,
+                                  textAlign: TextAlign.center,
+                                  textAlignVertical: TextAlignVertical.center,
+                                  controller: cvvController,
                                   decoration: InputDecoration(
                                     labelText: '123',
                                     filled: true,
@@ -198,8 +245,9 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                           ),
                         ],
                       ),
-                      SizedBox(height: 20),
+                      const SizedBox(height: 20),
                       TextField(
+                        controller: cardNumberController,
                         decoration: InputDecoration(
                           labelText: 'Card Number',
                           filled: true,
@@ -209,7 +257,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                             borderSide: BorderSide.none,
                           ),
                         ),
-                        obscureText: true,
+                        obscureText: false,
                       ),
                     ],
                   ),
@@ -223,6 +271,15 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                       width: 70,
                       child: TextField(
                         obscureText: true,
+                        maxLength: 4,
+                        buildCounter: (context,
+                                {required currentLength,
+                                required isFocused,
+                                maxLength}) =>
+                            null,
+                        textAlign: TextAlign.center,
+                        textAlignVertical: TextAlignVertical.center,
+                        controller: pinController,
                         decoration: InputDecoration(
                           labelText: '1234',
                           filled: true,
@@ -238,20 +295,13 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                     ),
                   ],
                 ),
-
                 const SizedBox(height: 20),
-
-                PrimaryButton(
-                  text: "Submit",
-                  onPressed: () {},
-                )
-                // ElevatedButton(
-                //   onPressed: () {
-                //     // Implement card processing logic here
-                //     Navigator.pop(context);
-                //   },
-                //   child: Text('Submit'),
-                // ),
+                _isLoading
+                    ? CircularProgressIndicator()
+                    : PrimaryButton(
+                        text: _isLoading ? 'Processing...' : "Submit",
+                        onPressed: () => _isLoading ? null : _submitCard(),
+                      ),
               ],
             ),
           ),
@@ -260,59 +310,232 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
     );
   }
 
-  // Displays an error modal with a message.
-  void _showErrorModal(BuildContext context, String errorMessage) {
+  void autorizeOTP(BuildContext context, data) {
     showModalBottomSheet(
       context: context,
-      backgroundColor: Colors.redAccent,
-      shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
-      ),
       builder: (context) {
-        return SizedBox(
-          width: MediaQuery.of(context).size.width,
+        return Container(
+          height: 400,
+          decoration: const BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+          ),
           child: Padding(
-            padding: const EdgeInsets.all(20.0),
+            padding: const EdgeInsets.all(20),
             child: Column(
-              mainAxisSize: MainAxisSize.min,
               children: [
-                const Text(
-                  'Error',
-                  style: TextStyle(
-                    fontSize: 18,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.white,
-                  ),
-                ),
-                const SizedBox(height: 10),
                 Text(
-                  errorMessage,
-                  style: const TextStyle(
-                    fontSize: 16,
-                    color: Colors.white,
+                  'Authorize OTP',
+                  style: TextStyle(
+                    fontSize: 24,
+                    fontWeight: FontWeight.bold,
+                    color: Theme.of(context).colorScheme.secondary,
                   ),
-                  textAlign: TextAlign.center,
                 ),
                 const SizedBox(height: 20),
-                ElevatedButton(
-                  onPressed: () {
-                    Navigator.pop(context);
-                  },
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.white,
-                    foregroundColor: Colors.red,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(10),
-                    ),
+                Container(
+                  decoration: BoxDecoration(
+                    color: Theme.of(context).colorScheme.primary,
+                    borderRadius: BorderRadius.circular(15),
+                    boxShadow: const [
+                      BoxShadow(
+                        color: Colors.black26,
+                        blurRadius: 8,
+                        offset: Offset(0, 4),
+                      ),
+                    ],
                   ),
-                  child: const Text('OK'),
+                  padding: const EdgeInsets.all(20),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        (data['message']).toString(),
+                        style: const TextStyle(
+                          color: Colors.white,
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      const SizedBox(height: 20),
+                      TextField(
+                        controller: otpController,
+                        decoration: InputDecoration(
+                          labelText: 'OTP Token',
+                          filled: true,
+                          fillColor: Colors.white,
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(10),
+                            borderSide: BorderSide.none,
+                          ),
+                        ),
+                        obscureText: false,
+                      ),
+                    ],
+                  ),
                 ),
+                const SizedBox(height: 20),
+                PrimaryButton(
+                  text: _isLoading ? 'Submitting...' : "Submit",
+                  onPressed: () async {
+                    try {
+                      final otpToken = otpController.text.trim();
+
+                      if (otpToken.isEmpty) {
+                        showBottomSheetModal(context, "Token is required!");
+                        return;
+                      }
+
+                      LoadingModal.show(context, "Processing OTP...",
+                          message: "Please wait...");
+
+                      final cartProvider =
+                          Provider.of<CartProvider>(context, listen: false);
+                      final tokenId = data['tokenId'];
+                      final transactionReference = data['transactionReference'];
+                      final collectionChannel = data['collectionChannel'];
+                      final items = cartProvider.cartItems.map((item) {
+                        return {
+                          "id": item.product.id,
+                          "name": item.product.title,
+                          "price": item.product.price,
+                          "quantity": item.quantity,
+                        };
+                      }).toList();
+
+                      var requestData = {
+                        "token": otpToken,
+                        "tokenId": tokenId,
+                        "items": items,
+                        "transactionReference": transactionReference,
+                        "collectionChannel": collectionChannel,
+                      };
+
+                      var response =
+                          await orderRepository.submitOTP(requestData);
+
+                      LoadingModal.hide(context);
+                      Navigator.pop(context);
+
+                      if (response.data['success']) {
+                        otpController.clear();
+
+                        // Navigator.of(context, rootNavigator: true).popUntil((route) => route.isFirst);
+
+                        Navigator.pop(context);
+                        showMessageDialog(context, "success", "Success!",
+                            "Order processed successfully!");
+
+                        // clear cart
+                        cartProvider.clearCart();
+                      } else {
+                        showBottomSheetModal(
+                            context, "Error: ${response.data['message']}");
+                      }
+                      // ignore: avoid_print
+                      debugPrint("Response data: ${response.data}");
+                      // ignore: avoid_print
+                      debugPrint("Response status: ${response.statusCode}");
+                    } catch (e) {
+                      LoadingModal.hide(context);
+                      showBottomSheetModal(context, '$e');
+                      // showBottomSheetModal(context,
+                      //     "An unexpected error occurred: ${e.toString()}");
+                    } finally {
+                      setState(() {
+                        _isLoading = false;
+                      });
+                    }
+                  },
+                )
               ],
             ),
           ),
         );
       },
     );
+  }
+
+  void _submitCard() async {
+    final cardNumber = cardNumberController.text.trim();
+    final expMonth = expMonthController.text.trim();
+    final expYear = expYearController.text.trim();
+    final cvv = cvvController.text.trim();
+    final pin = pinController.text.trim();
+    final cartProvider = Provider.of<CartProvider>(context, listen: false);
+
+    if ([cardNumber, expMonth, expYear, cvv, pin]
+        .any((field) => field.isEmpty)) {
+      showMessageDialog(
+          context, "info", "Info!", "Please fill in all card details.");
+      return;
+    }
+
+    // Navigator.pop(context);
+    LoadingModal.show(context, "Processing payment...",
+        message: "Please wait...");
+
+    setState(() {
+      _isLoading = true;
+    });
+
+    try {
+      final items = cartProvider.cartItems.map((item) {
+        return {
+          'id': item.product.id,
+          'name': item.product.title,
+          'price': item.product.price,
+          'quantity': item.quantity,
+        };
+      }).toList();
+
+      var data = {
+        'cardNumber': cardNumber,
+        'expiryMonth': expMonth,
+        'expiryYear': expYear,
+        'cvv': cvv,
+        'pin': pin,
+        'amount': cartProvider.totalPrice,
+        'items': items,
+      };
+
+      var response = await orderRepository.submitOrder('card', data);
+      final responseData = response.data;
+
+      cardNumberController.clear();
+      expMonthController.clear();
+      expYearController.clear();
+      cvvController.clear();
+      pinController.clear();
+      otpController.clear();
+
+      if (responseData['success'] == false &&
+          responseData['OTP_AUTHORIZATION_REQUIRED'] == true) {
+        LoadingModal.hide(context);
+        Navigator.pop(context);
+
+        autorizeOTP(context, responseData);
+        return;
+      }
+
+      // ignore: use_build_context_synchronously
+      LoadingModal.hide(context);
+      Navigator.pop(context);
+
+      showMessageDialog(
+          // ignore: use_build_context_synchronously
+          context,
+          "success",
+          "Success!",
+          "Order processed successfully!");
+    } catch (e) {
+      LoadingModal.hide(context);
+      showMessageDialog(context, "error", "Error!", e.toString());
+    } finally {
+      setState(() {
+        _isLoading = false;
+      });
+    }
   }
 
   @override
@@ -368,8 +591,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                       const CheckOutReview(),
                       const SizedBox(height: 20),
                       ShippingInformation(
-                          onDeliveryInfoChanged:
-                              _updateDeliveryInfo), // Pass the function directly.
+                          onDeliveryInfoChanged: _updateDeliveryInfo),
                       const SizedBox(height: 20),
                       PaymentMethod(
                         onPaymentTypeSelected: (String paymentType) {
@@ -389,9 +611,9 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                   return SecondaryButton(
                     text:
                         "CONFIRM & PAY (${NumberFormat.simpleCurrency(locale: 'en_NG', name: '₦').format(total)})",
-                    onPressed: _isLoading // Disable button when loading.
+                    onPressed: _isLoading
                         ? () {
-                            return null;
+                            return;
                           }
                         : () {
                             _confirmAndPay(
@@ -479,11 +701,10 @@ class CheckOutReview extends StatelessWidget {
   }
 }
 
-// This class holds the shipping information form.
 class ShippingInformation extends StatefulWidget {
   final Function(DeliveryInfo) onDeliveryInfoChanged;
 
-  const ShippingInformation({required this.onDeliveryInfoChanged});
+  const ShippingInformation({super.key, required this.onDeliveryInfoChanged});
 
   @override
   State<ShippingInformation> createState() => _ShippingInformationState();
@@ -692,6 +913,7 @@ class PaymentMethodButton extends StatelessWidget {
   final VoidCallback onTap;
 
   const PaymentMethodButton({
+    super.key,
     required this.label,
     required this.icon,
     required this.isSelected,
@@ -735,65 +957,3 @@ class PaymentMethodButton extends StatelessWidget {
     );
   }
 }
-
-
-
-
-
-
-
-
-
-
-// // This class represents the payment method selection.
-// class PaymentMethod extends StatelessWidget {
-//   final Function(String) onPaymentTypeSelected;
-
-//   const PaymentMethod({required this.onPaymentTypeSelected});
-
-//   @override
-//   Widget build(BuildContext context) {
-//     return Container(
-//       decoration: BoxDecoration(
-//         color: Colors.white,
-//         borderRadius: BorderRadius.circular(20),
-//       ),
-//       padding: const EdgeInsets.all(16),
-//       child: Column(
-//         crossAxisAlignment: CrossAxisAlignment.start,
-//         children: [
-//           Text(
-//             'Payment Method',
-//             style: TextStyle(
-//               fontSize: 18,
-//               fontWeight: FontWeight.bold,
-//               color: Theme.of(context).colorScheme.secondary,
-//             ),
-//           ),
-//           const SizedBox(height: 10),
-//           RadioListTile(
-//             title: const Text('Credit Card'),
-//             value: 'credit_card',
-//             groupValue: null, // This should be managed by the parent.
-//             onChanged: (value) {
-//               if (value != null) {
-//                 onPaymentTypeSelected(value);
-//               }
-//             },
-//           ),
-//           RadioListTile(
-//             title: const Text('PayPal'),
-//             value: 'paypal',
-//             groupValue: null, // This should be managed by the parent.
-//             onChanged: (value) {
-//               if (value != null) {
-//                 onPaymentTypeSelected(value);
-//               }
-//             },
-//           ),
-//           // Additional payment methods can be added similarly.
-//         ],
-//       ),
-//     );
-//   }
-// }

@@ -15,14 +15,15 @@ class ProductProvider with ChangeNotifier {
   String? get errorMessage => _errorMessage;
 
   Future<void> fetchProducts() async {
-    _loading = true;  
+    _loading = true;
     _errorMessage = null;
     notifyListeners();
 
     try {
       _products = await productRepository.getProducts();
     } catch (e) {
-      _errorMessage = 'Failed to load products, Error: $e! Please try again later.';
+      _errorMessage =
+          'Failed to load products, Error: $e! Please try again later.';
     } finally {
       _loading = false;
       notifyListeners();

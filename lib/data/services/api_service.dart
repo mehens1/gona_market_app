@@ -1,16 +1,38 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
+import 'package:gona_market_app/core/utils/ApiException.dart';
+import 'package:gona_market_app/data/services/token_service.dart';
 
 class ApiService {
   final Dio _dio;
   final String baseUrl;
+  bool _initialized = false;
 
   ApiService(this._dio, {required this.baseUrl}) {
     _dio.options.headers['Accept'] = 'application/json';
   }
 
+  Future<void> initialize() async {
+    if (_initialized) return;
+
+    try {
+      var tokenService = TokenService();
+      var userToken = await tokenService.getToken();
+
+      if (userToken != null && userToken.isNotEmpty) {
+        _dio.options.headers['Authorization'] = 'Bearer $userToken';
+      }
+      _initialized = true;
+    } catch (e) {
+      if (kDebugMode) {
+        print('Error during token retrieval: $e');
+      }
+    }
+  }
+
   Future<Response> get(String endpoint,
       {Map<String, dynamic>? queryParameters}) async {
+    await initialize();
     try {
       return await _dio.get(
         '$baseUrl$endpoint',
@@ -25,6 +47,7 @@ class ApiService {
   }
 
   Future<Response> getById(String endpoint, {required String id}) async {
+    await initialize();
     try {
       return await _dio.get('$baseUrl$endpoint/$id');
     } catch (e) {
@@ -36,39 +59,29 @@ class ApiService {
   }
 
   Future<Response> post(String endpoint, {dynamic data}) async {
+    await initialize();
     try {
       return await _dio.post(
         '$baseUrl$endpoint',
         data: data,
       );
-    } on DioException catch (e, stackTrace) {
+    } on DioException catch (e) {
+      final error = e.response?.data["message"]?.toString();
       if (kDebugMode) {
-        print('Error during POST request: ${e.response?.data}');
-        print('Error Code: ${e.response?.statusCode}');
-        print('StackTrace: $stackTrace');
+        print('DioException occurred: ${e.message}');
+        print('Response data api_service: ${e.response?.data}');
       }
-
-      String errorMessage = 'An error occurred';
-      if (e.response != null && e.response!.data != null) {
-        if (e.response!.data['message'] != null) {
-          errorMessage = e.response!.data['message'];
-        } else if (e.response!.data['errors'] != null) {
-          final errors = e.response!.data['errors'];
-          errorMessage = errors.values.expand((e) => e).join(', ');
-        }
-      }
-
-      throw errorMessage.toString();
+      throw Exception(error);
     } catch (e) {
       if (kDebugMode) {
         print('An unexpected error occurred: $e');
       }
-      throw Exception(
-          'An unexpected error occurred. Please try again.');
+      throw Exception("An unexpected error occurred. Please try again");
     }
   }
 
   Future<Response> put(String endpoint, {dynamic data}) async {
+    await initialize();
     try {
       return await _dio.put(
         '$baseUrl$endpoint',

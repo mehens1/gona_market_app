@@ -1,4 +1,3 @@
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:gona_market_app/core/widgets/text_inputs.dart';
 import 'package:gona_market_app/data/models/product_model.dart';
@@ -36,7 +35,6 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     final userProvider = Provider.of<UserProvider>(context);
-    final categoryProvider = Provider.of<CategoryProvider>(context);
     final cartProvider = Provider.of<CartProvider>(context);
     final user = userProvider.user;
     double screenWidth = MediaQuery.of(context).size.width;
@@ -137,8 +135,10 @@ class _HomeScreenState extends State<HomeScreen> {
                     children: [
                       _buildCategoryTab('All', true),
                       if (categoryProvider.categories.isNotEmpty)
-                        ...categoryProvider.categories.map((category) =>
-                            _buildCategoryTab(category['category'], false)),
+                        ...categoryProvider.categories.map(
+                          (category) =>
+                              _buildCategoryTab(category['category'], false),
+                        ),
                     ],
                   ),
                 );

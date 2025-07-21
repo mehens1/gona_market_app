@@ -3,6 +3,8 @@ import 'package:gona_market_app/logic/providers/cart_provider.dart';
 import 'package:provider/provider.dart';
 
 class CheckoutScreen extends StatefulWidget {
+  const CheckoutScreen({super.key});
+
   @override
   _CheckoutScreenState createState() => _CheckoutScreenState();
 }
@@ -12,28 +14,31 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
 
   @override
   Widget build(BuildContext context) {
-
     final cartProvider = Provider.of<CartProvider>(context);
-    final cartItems = cartProvider.cartItems;
+    // final cartItems = cartProvider.cartItems;
     final total = cartProvider.totalPrice;
-    
+
     return Scaffold(
       backgroundColor: Theme.of(context).colorScheme.primary,
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         elevation: 0,
         leading: IconButton(
-          icon: Icon(Icons.arrow_back, color: Colors.yellow),
+          icon: const Icon(Icons.arrow_back, color: Colors.yellow),
           onPressed: () {},
         ),
-        title: Text('Checkout', style: TextStyle(color: Theme.of(context).colorScheme.onPrimary)),
+        title: Text('Checkout',
+            style: TextStyle(color: Theme.of(context).colorScheme.onPrimary)),
         actions: [
           Padding(
             padding: const EdgeInsets.only(right: 16.0),
             child: Center(
               child: Text(
                 "$total",
-                style: const TextStyle(color: Colors.white, fontSize: 20, fontWeight: FontWeight.bold),
+                style: const TextStyle(
+                    color: Colors.white,
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold),
               ),
             ),
           ),
@@ -53,7 +58,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
             //     PaymentMethodButton(label: 'Other', icon: Icons.local_atm, isSelected: false),
             //   ],
             // ),
-            SizedBox(height: 20),
+            const SizedBox(height: 20),
 
             // Card Number Input
             CardDetailsSection(),
@@ -68,11 +73,15 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(30),
                 ),
-                padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 100),
+                padding:
+                    const EdgeInsets.symmetric(vertical: 16, horizontal: 100),
               ),
               child: const Text(
                 'CONFIRM & PAY',
-                style: TextStyle(color: Colors.blueAccent, fontSize: 18, fontWeight: FontWeight.bold),
+                style: TextStyle(
+                    color: Colors.blueAccent,
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold),
               ),
             ),
           ],
@@ -88,6 +97,7 @@ class PaymentMethodButton extends StatelessWidget {
   final bool isSelected;
 
   const PaymentMethodButton({
+    super.key,
     required this.label,
     required this.icon,
     required this.isSelected,
@@ -106,7 +116,7 @@ class PaymentMethodButton extends StatelessWidget {
           child: Column(
             children: [
               Icon(icon, color: isSelected ? Colors.blue : Colors.white),
-              SizedBox(height: 8),
+              const SizedBox(height: 8),
               Text(
                 label,
                 style: TextStyle(
@@ -123,6 +133,8 @@ class PaymentMethodButton extends StatelessWidget {
 }
 
 class CardDetailsSection extends StatefulWidget {
+  const CardDetailsSection({super.key});
+
   @override
   _CardDetailsSectionState createState() => _CardDetailsSectionState();
 }
@@ -137,7 +149,7 @@ class _CardDetailsSectionState extends State<CardDetailsSection> {
         color: Colors.white,
         borderRadius: BorderRadius.circular(20),
       ),
-      padding: EdgeInsets.all(16),
+      padding: const EdgeInsets.all(16),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -151,7 +163,7 @@ class _CardDetailsSectionState extends State<CardDetailsSection> {
             ),
             keyboardType: TextInputType.number,
           ),
-          SizedBox(height: 16),
+          const SizedBox(height: 16),
 
           // Name on Card
           TextField(
@@ -162,7 +174,7 @@ class _CardDetailsSectionState extends State<CardDetailsSection> {
               ),
             ),
           ),
-          SizedBox(height: 16),
+          const SizedBox(height: 16),
 
           // Expiration Date and CCV
           Row(
@@ -178,7 +190,7 @@ class _CardDetailsSectionState extends State<CardDetailsSection> {
                   keyboardType: TextInputType.number,
                 ),
               ),
-              SizedBox(width: 16),
+              const SizedBox(width: 16),
               Expanded(
                 child: TextField(
                   decoration: InputDecoration(
@@ -192,13 +204,13 @@ class _CardDetailsSectionState extends State<CardDetailsSection> {
               ),
             ],
           ),
-          SizedBox(height: 16),
+          const SizedBox(height: 16),
 
           // Save card details toggle
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text('Save card details'),
+              const Text('Save card details'),
               Switch(
                 value: saveCardDetails,
                 onChanged: (value) {

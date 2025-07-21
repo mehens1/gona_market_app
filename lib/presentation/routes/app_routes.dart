@@ -9,6 +9,8 @@ import 'package:gona_market_app/presentation/screens/auth/terms_and_condition.da
 import 'package:gona_market_app/presentation/screens/portal/cart_screen.dart';
 import 'package:gona_market_app/presentation/screens/portal/checkout_screen.dart';
 import 'package:gona_market_app/presentation/screens/portal/my_store_screen.dart';
+import 'package:gona_market_app/presentation/screens/portal/order_details_screen.dart';
+import 'package:gona_market_app/presentation/screens/portal/orders_screen.dart';
 import 'package:gona_market_app/presentation/screens/portal/product_details_screen.dart';
 import 'package:gona_market_app/presentation/screens/portal/profile_screen.dart';
 import 'package:gona_market_app/presentation/screens/portal/upload_product_screen.dart';
@@ -29,6 +31,8 @@ class AppRoutes {
   static const String productDetails = '/product-detail';
   static const String userProfile = '/user-profile';
   static const String myStore = '/my-store';
+  static const String orders = '/orders';
+  static const String order = '/order';
   static const String uploadProduct = '/upload-product';
 
   // Define a method to generate routes
@@ -56,16 +60,25 @@ class AppRoutes {
         return MaterialPageRoute(
           builder: (_) => ProductDetailsScreen(product: product),
         );
+
+      // Orders
+      case orders:
+        return MaterialPageRoute(builder: (_) => const OrdersScreen());
+      case order:
+        final args = settings.arguments as OrderScreenArguments;
+        return MaterialPageRoute(
+          builder: (_) => OrderDetailsScreen(orderId: args.orderId),
+        );
       case userProfile:
         return MaterialPageRoute(builder: (_) => const ProfileScreen());
       case cart:
-        return MaterialPageRoute(builder: (_) => CartScreen());
+        return MaterialPageRoute(builder: (_) => const CartScreen());
       case checkout:
-        return MaterialPageRoute(builder: (_) => CheckoutScreen());
+        return MaterialPageRoute(builder: (_) => const CheckoutScreen());
       case myStore:
-        return MaterialPageRoute(builder: (_) => MyStoreScreen());
+        return MaterialPageRoute(builder: (_) => const MyStoreScreen());
       case uploadProduct:
-        return MaterialPageRoute(builder: (_) => ProductUploadScreen());
+        return MaterialPageRoute(builder: (_) => const ProductUploadScreen());
       default:
         return MaterialPageRoute(builder: (_) => const UndefinedRouteScreen());
     }
@@ -92,4 +105,9 @@ class ProductScreenArguments {
   final String productId;
 
   ProductScreenArguments({required this.productId});
+}
+
+class OrderScreenArguments {
+  final String orderId;
+  OrderScreenArguments({required this.orderId});
 }
